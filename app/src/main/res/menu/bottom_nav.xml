@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/glicemia"
+        android:title="Glicemia"
+        android:icon="@drawable/ic_baseline_medical_services_24"
+        />
+    <item
+        android:id="@+id/configuracao"
+        android:title="Configuração"
+        android:icon="@drawable/ic_baseline_settings_24"
+        />
+    <item
+        android:id="@+id/relatorio"
+        android:title="Relatório"
+        android:icon="@drawable/ic_baseline_library_books_24"
+        />
+
+</menu>
