@@ -3,9 +3,9 @@ package com.example.contagemglicemia
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.example.contagemglicemia.Config.ConfigFragment
-import com.example.contagemglicemia.Home.HomeFragment
-import com.example.contagemglicemia.Report.ReportFragment
+import com.example.contagemglicemia.Modules.Config.ConfigFragment
+import com.example.contagemglicemia.Modules.Home.HomeFragment
+import com.example.contagemglicemia.Modules.Report.ReportFragment
 import com.example.contagemglicemia.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

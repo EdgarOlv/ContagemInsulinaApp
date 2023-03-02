@@ -1,4 +1,4 @@
-package com.example.contagemglicemia.Home
+package com.example.contagemglicemia.Modules.Home
 
 import android.os.Bundle
 import android.util.Log
