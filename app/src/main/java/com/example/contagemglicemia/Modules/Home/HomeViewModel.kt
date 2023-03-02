@@ -1,4 +1,4 @@
-package com.example.contagemglicemia.Home
+package com.example.contagemglicemia.Modules.Home
 
 import androidx.lifecycle.ViewModel
 
