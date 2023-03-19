@@ -20,20 +20,21 @@ class ConfigFragment : Fragment() {
     private lateinit var dbManager: MyDatabaseManager
 
     var glicemaAlvo = 110
-    var fatorSensibilidade = 37.0
+    var fatorSensibilidade = 37
     var relacaoCarboidrato = 10
     var resultadoInsulina = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        startDatabase()
-    }
-
-    private fun startDatabase() {
-        //dbHelper = MyDatabaseHelper(requireContext())
-        //db = dbHelper.writableDatabase
-        //startDataDatabase()
         dbManager = MyDatabaseManager(requireContext())
+        dbManager.getConfigData().forEach {
+            when(it.id){
+                1 -> fatorSensibilidade = it.value
+                2 -> glicemaAlvo = it.value
+                3 -> relacaoCarboidrato = it.value
+            }
+        }
+
     }
 
     override fun onCreateView(
@@ -43,7 +44,16 @@ class ConfigFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentConfigBinding.inflate(inflater, container, false)
-
+        dbManager.getAlimentoData().forEach {
+            when(it.id){
+                1 -> binding.campoFood1.setText(it.qtd_carboidrato.toString())
+                2 -> binding.campoFood2.setText(it.qtd_carboidrato.toString())
+                3 -> binding.campoFood3.setText(it.qtd_carboidrato.toString())
+                4 -> binding.campoFood4.setText(it.qtd_carboidrato.toString())
+                5 -> binding.campoFood5.setText(it.qtd_carboidrato.toString())
+                6 -> binding.campoFood6.setText(it.qtd_carboidrato.toString())
+            }
+        }
         return binding.root
     }
 
@@ -54,11 +64,7 @@ class ConfigFragment : Fragment() {
         binding.campoFatorSensibilidade.setText(fatorSensibilidade.toString())
         binding.campoRelacaoCarboidrato.setText(relacaoCarboidrato.toString())
 
-        /*val values = ContentValues().apply {
-            put("valor", 100)
-        }*/
-        dbManager.insertGlycemi(120)
-    //db.insert("glicemias", null, values)
+
     }
 
     fun startDataDatabase() {
