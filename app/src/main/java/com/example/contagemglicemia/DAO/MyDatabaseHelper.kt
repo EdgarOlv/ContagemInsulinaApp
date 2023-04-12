@@ -16,7 +16,6 @@ class MyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
     }
 
     override fun onCreate(db: SQLiteDatabase) {
-        // Aqui você pode criar a tabela do banco de dados
         val CREATE_TABLE_GLYCEMIA = "CREATE TABLE ${TableGlicemia.TABLE_NAME} (" +
                 "${TableGlicemia.ID} INTEGER PRIMARY KEY," +
                 "${TableGlicemia.VALUE} INTEGER," +

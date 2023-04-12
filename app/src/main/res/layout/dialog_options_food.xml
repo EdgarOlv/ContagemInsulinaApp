@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Escolha uma opção:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+    <RadioGroup
+        android:id="@+id/radio_group_opcoes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/radio_opcao1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Opção 1" />
+
+        <RadioButton
+            android:id="@+id/radio_opcao2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Opção 2" />
+
+        <RadioButton
+            android:id="@+id/radio_opcao3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Opção 3" />
+
+        <RadioButton
+            android:id="@+id/radio_opcao4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Opção 4" />
+
+        <RadioButton
+            android:id="@+id/radio_opcao5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Opção 5" />
+
+        <RadioButton
+            android:id="@+id/radio_opcao6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Opção 6" />
+
+    </RadioGroup>
+
+</LinearLayout>

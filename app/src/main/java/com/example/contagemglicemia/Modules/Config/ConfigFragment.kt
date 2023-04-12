@@ -1,6 +1,5 @@
 package com.example.contagemglicemia.Modules.Config
 
-import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -27,14 +26,25 @@ class ConfigFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dbManager = MyDatabaseManager(requireContext())
-        dbManager.getConfigData().forEach {
-            when(it.id){
-                1 -> fatorSensibilidade = it.value
-                2 -> glicemaAlvo = it.value
-                3 -> relacaoCarboidrato = it.value
-            }
-        }
 
+        try {
+
+            dbManager.getConfigData().forEach {
+                when (it.id) {
+                    1 -> fatorSensibilidade = it.value
+                    2 -> glicemaAlvo = it.value
+                    3 -> relacaoCarboidrato = it.value
+                }
+            }
+            dbManager.getAlimentoData().forEach {
+                when (it.id) {
+                    1 -> binding.campoFood1.setText(it.qtd_carboidrato.toString())
+                    2 -> binding.campoFood2.setText(it.qtd_carboidrato.toString())
+                    3 -> binding.campoFood3.setText(it.qtd_carboidrato.toString())
+                }
+
+            }
+        }catch (e: Exception) {}
     }
 
     override fun onCreateView(
@@ -45,7 +55,7 @@ class ConfigFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentConfigBinding.inflate(inflater, container, false)
         dbManager.getAlimentoData().forEach {
-            when(it.id){
+            when (it.id) {
                 1 -> binding.campoFood1.setText(it.qtd_carboidrato.toString())
                 2 -> binding.campoFood2.setText(it.qtd_carboidrato.toString())
                 3 -> binding.campoFood3.setText(it.qtd_carboidrato.toString())
@@ -63,28 +73,5 @@ class ConfigFragment : Fragment() {
         binding.campoGlicemiaAlvo.setText(glicemaAlvo.toString())
         binding.campoFatorSensibilidade.setText(fatorSensibilidade.toString())
         binding.campoRelacaoCarboidrato.setText(relacaoCarboidrato.toString())
-
-
-    }
-
-    fun startDataDatabase() {
-        db = dbHelper.writableDatabase
-
-        val values = ContentValues().apply {
-            put("nome", "F.S.")
-            put("valor", 37)
-        }
-        val values2 = ContentValues().apply {
-            put("nome", "Glicemia Alvo")
-            put("valor", 110)
-        }
-        val values3 = ContentValues().apply {
-            put("nome", "Carboidrato")
-            put("valor", 10)
-        }
-        db.insert("config", null, values)
-        db.insert("config", null, values2)
-        db.insert("config", null, values3)
-        db.close()
     }
 }
