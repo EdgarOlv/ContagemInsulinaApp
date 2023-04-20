@@ -5,7 +5,6 @@ import android.content.Context
 import android.database.Cursor
 import com.example.contagemglicemia.Model.Alimento
 import com.example.contagemglicemia.Model.Configuracao
-import com.example.contagemglicemia.Model.Glicemia
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -47,13 +46,31 @@ class MyDatabaseManager(context: Context) {
             put("id_nome", "Almoço")
             put("qtd_carboidrato", 55)
         }
+        val values7 = ContentValues().apply {
+            put("nome", "Lanche da Tarde")
+            put("id_nome", "LancheT")
+            put("qtd_carboidrato", 30)
+        }
+        val values8 = ContentValues().apply {
+            put("nome", "Jantar")
+            put("id_nome", "Jantar")
+            put("qtd_carboidrato", 45)
+        }
+        val values9 = ContentValues().apply {
+            put("nome", "Ceia")
+            put("id_nome", "Ceia")
+            put("qtd_carboidrato", 40)
+        }
         db.insert("alimentos", null, values4)
         db.insert("alimentos", null, values5)
         db.insert("alimentos", null, values6)
+        db.insert("alimentos", null, values7)
+        db.insert("alimentos", null, values8)
+        db.insert("alimentos", null, values9)
         db.close()
     }
 
-    fun insertGlycemia(value: Int) {
+    fun insertGlycemia(value: Int, resultadoInsulina: Double) {
         val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
         val date = Date()
         val dateString = dateFormat.format(date)
@@ -62,9 +79,10 @@ class MyDatabaseManager(context: Context) {
         val values = ContentValues().apply {
             put("valor", value)
             put("data", dateString)
+            put("insulina_aplicada", resultadoInsulina)
         }
         db.insert("glicemias", null, values)
-        //db.close()
+        // db.close()
     }
 
     fun deleteData(id: Long) {
@@ -126,7 +144,7 @@ class MyDatabaseManager(context: Context) {
                 val id_nome = getString(getColumnIndexOrThrow("id_nome"))
                 val nome = getString(getColumnIndexOrThrow("nome"))
                 val valor = getInt(getColumnIndexOrThrow("qtd_carboidrato"))
-                list.add(Alimento(id, id_nome,nome, valor))
+                list.add(Alimento(id, id_nome, nome, valor))
             }
         }
         return list
