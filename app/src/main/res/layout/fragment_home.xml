@@ -116,6 +116,8 @@
             android:layout_height="80dp"
             android:layout_marginTop="20dp"
             android:text="Calcular"
+            android:backgroundTint="@color/blue_500"
+            android:textColor="@color/white"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -6,4 +6,6 @@
     <string name="corrigir">Corrigir</string>
     <string name="alimentar">Alimentar</string>
     <string name="malhar">Malhar</string>
+    <string name="permission_location_info">Clique aqui para saber mais</string>
+
 </resources>

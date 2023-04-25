@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import com.example.contagemglicemia.Model.Alimento
 import com.example.contagemglicemia.Model.Configuracao
+import com.example.contagemglicemia.Model.Glicemia
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -70,8 +71,8 @@ class MyDatabaseManager(context: Context) {
         db.close()
     }
 
-    fun insertGlycemia(value: Int, resultadoInsulina: Double) {
-        val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
+    fun insertGlycemia(value: Int, resultadoInsulina: Int) {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         val date = Date()
         val dateString = dateFormat.format(date)
 
@@ -91,6 +92,12 @@ class MyDatabaseManager(context: Context) {
         db.close()
     }
 
+    fun deleteAllData() {
+        val db = dbHelper.writableDatabase
+        db.delete("glicemias", null, null)
+        db.close()
+    }
+
     fun updateData(id: Long, name: String, age: Int) {
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
@@ -107,14 +114,25 @@ class MyDatabaseManager(context: Context) {
         return cursor
     }
 
-    fun getGlicemy() {
+    fun getAllGlicemy(): List<Glicemia> {
         val db = dbHelper.readableDatabase
-        val cursor = db.rawQuery("SELECT data FROM exemplo WHERE id = ?", arrayOf("1"))
-        if (cursor.moveToFirst()) {
-            val dateString = cursor.getString(0)
-            val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
-            val date = dateFormat.parse(dateString)
+        val cursor = db.rawQuery("SELECT id, valor, data, insulina_aplicada FROM glicemias ORDER BY data DESC", null)
+        var list = mutableListOf<Glicemia>()
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
+
+        with(cursor) {
+            while (moveToNext()) {
+                val id = getInt(getColumnIndexOrThrow("id"))
+                val valor = getInt(getColumnIndexOrThrow("valor"))
+                val data = getString(getColumnIndexOrThrow("data"))
+                val dateConverted = dateFormat.parse(data)
+
+                val insulin_aplicada = getInt(getColumnIndexOrThrow("insulina_aplicada"))
+                list.add(Glicemia(id, valor, data.toString(), insulin_aplicada))
+            }
         }
+
+        return list
     }
 
     fun getConfigData(): List<Configuracao> {

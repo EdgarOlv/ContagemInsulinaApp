@@ -1,34 +1,38 @@
 package com.example.contagemglicemia.Modules.Config
 
-import android.database.sqlite.SQLiteDatabase
+import android.app.Activity
+import android.app.Activity.RESULT_OK
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.contagemglicemia.DAO.MyDatabaseHelper
 import com.example.contagemglicemia.DAO.MyDatabaseManager
 import com.example.contagemglicemia.databinding.FragmentConfigBinding
+import java.io.*
 
 class ConfigFragment : Fragment() {
 
     private lateinit var binding: FragmentConfigBinding
-    lateinit var db: SQLiteDatabase
-    private lateinit var dbHelper: MyDatabaseHelper
-
     private lateinit var dbManager: MyDatabaseManager
 
     var glicemaAlvo = 110
     var fatorSensibilidade = 37
     var relacaoCarboidrato = 10
-    var resultadoInsulina = 0.0
+
+    val PICK_FILE_REQUEST_CODE = -1
+    var DATABASE_NAME = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dbManager = MyDatabaseManager(requireContext())
 
         try {
-
             dbManager.getConfigData().forEach {
                 when (it.id) {
                     1 -> fatorSensibilidade = it.value
@@ -42,9 +46,9 @@ class ConfigFragment : Fragment() {
                     2 -> binding.campoFood2.setText(it.qtd_carboidrato.toString())
                     3 -> binding.campoFood3.setText(it.qtd_carboidrato.toString())
                 }
-
             }
-        }catch (e: Exception) {}
+        } catch (e: Exception) {
+        }
     }
 
     override fun onCreateView(
@@ -73,5 +77,76 @@ class ConfigFragment : Fragment() {
         binding.campoGlicemiaAlvo.setText(glicemaAlvo.toString())
         binding.campoFatorSensibilidade.setText(fatorSensibilidade.toString())
         binding.campoRelacaoCarboidrato.setText(relacaoCarboidrato.toString())
+        binding.buttonSaveConfig.setOnClickListener {
+            // TODO: Pegar cada campo e salvar em objeto e em banco
+            Toast.makeText(context, "Botao Salvar cliado", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.buttonExport.setOnClickListener{
+            exportDatabase(requireContext(), MyDatabaseHelper(requireContext()).nameDatabase())
+        }
+
+        binding.buttonImport.setOnClickListener{
+            DATABASE_NAME = MyDatabaseHelper(requireContext()).nameDatabase()
+            importDatabase()
+        }
+
+        binding.buttonDeleteAll.setOnClickListener{
+            dbManager.deleteAllData()
+            Toast.makeText(context, "Banco de dados limpo com sucesso!", Toast.LENGTH_SHORT).show()
+        }
     }
+
+    fun exportDatabase(context: Context, dbName: String) {
+        try {
+            val file = File(context.getExternalFilesDir(null), dbName)
+            val input = FileInputStream(context.getDatabasePath(dbName))
+            val output = FileOutputStream(file)
+            val buffer = ByteArray(1024)
+            var length: Int
+            while (input.read(buffer).also { length = it } > 0) {
+                output.write(buffer, 0, length)
+            }
+            output.flush()
+            output.close()
+            input.close()
+            Toast.makeText(context, "Banco de dados exportado com sucesso!", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(context, "Erro ao exportar o banco de dados", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun importDatabase() {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "application/octet-stream"
+        }
+        startActivityForResult(intent, PICK_FILE_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PICK_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            data?.data?.also { uri ->
+                try {
+                    val inputStream = requireContext().contentResolver.openInputStream(uri)
+                    val dbFile = File(requireContext().getDatabasePath(DATABASE_NAME).path)
+                    dbFile.parentFile.mkdirs()
+                    dbFile.createNewFile()
+                    inputStream?.use { input ->
+                        FileOutputStream(dbFile).use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+                    Toast.makeText(requireContext(), "Banco de dados importado com sucesso!", Toast.LENGTH_SHORT).show()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    Toast.makeText(requireContext(), "Erro ao importar banco de dados", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+
 }

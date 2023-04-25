@@ -123,7 +123,7 @@ class HomeFragment : Fragment() {
                     if (binding.checkboxMalhar.isChecked) {
                     }
 
-                    dbManager.insertGlycemia(valorDigitado, resultadoInsulina)
+                    dbManager.insertGlycemia(valorDigitado, resultadoInsulina.toInt())
                     campoResultado.setText(String.format("Aplicar %.2f UI", resultadoInsulina))
 
                     val imm =
