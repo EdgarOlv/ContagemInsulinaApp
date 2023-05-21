@@ -9,8 +9,20 @@
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+
     </style>
 
+    <style name="MyAppBarStyle" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="android:textColor">@color/white</item>
+        <item name="colorPrimary">@color/blue_500</item>
+    </style>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="ToolbarSubtitleAppearance" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+        <item name="android:textSize">11sp</item>
+    </style>
 
 </resources>

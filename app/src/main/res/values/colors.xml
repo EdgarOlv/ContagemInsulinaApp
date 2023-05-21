@@ -12,6 +12,7 @@
     <color name="icons">#212121</color>
     <color name="divider">#BDBDBD</color>
     <color name="colorTextoButton">#ff000000</color>
+    <color name="colorGreenSave">#01CD52</color>
 
     <!--<color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>

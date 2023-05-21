@@ -24,15 +24,30 @@
 
         <EditText
             android:id="@+id/editText"
-            android:layout_width="200sp"
+            android:layout_width="150sp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:hint="150"
+            android:hint="Ex.: 150"
             android:textSize= "20sp"
             android:inputType="phone"
+
+            android:textColor="@color/secondaryTextPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_view_id" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/editText"
+            android:layout_alignParentEnd="true"
+            android:text="mg/dl"
+            android:textColor="@color/secondaryTextPrimary"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@+id/editText"
+            app:layout_constraintEnd_toEndOf="@+id/editText"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_id"
+            app:layout_constraintVertical_bias="0.59000003" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/checkboxes"
@@ -116,43 +131,39 @@
             android:layout_height="80dp"
             android:layout_marginTop="20dp"
             android:text="Calcular"
+            android:backgroundTint="@color/blue_500"
+            android:textColor="@color/white"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout_refeicao" />
 
-
-
-        <LinearLayout
-            android:id="@+id/linearLayout_resultado"
+        <TextView
+            android:id="@+id/text_view_result"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:text="Resultado: "
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_calcular">
+            app:layout_constraintTop_toBottomOf="@+id/button_calcular" />
 
-            <TextView
-                android:id="@+id/text_view_result"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize= "30sp"
-                android:textStyle= "bold"
-                android:text="Resultado: "
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+        <TextView
+            android:id="@+id/text_view_resultado_insulina"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="26sp"
+            android:layout_marginTop="10dp"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_result"
+            app:suffixText="U.I."
+            tools:text="Aplicar x U.I" />
 
-            <TextView
-                android:id="@+id/text_view_resultado_insulina"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="Aplicar x U.I"
-                android:textSize= "30sp"
-                app:suffixText="U.I."
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
 
-        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
