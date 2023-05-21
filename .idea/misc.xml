@@ -9,6 +9,7 @@
         <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/drawable/button_background.xml" value="0.197" />
         <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/drawable/ic__192186.xml" value="0.1435" />
         <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/drawable/ic_alert.xml" value="0.22" />
+        <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/drawable/ic_arrow_white.xml" value="0.123" />
         <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/drawable/ic_launcher.xml" value="0.165" />
         <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/drawable/ic_save.xml" value="0.1625" />
         <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/activity_main.xml" value="0.2" />
@@ -16,7 +17,7 @@
         <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/dialog_options_food.xml" value="0.1453125" />
         <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/fragment_config.xml" value="0.33" />
         <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/fragment_home.xml" value="0.25" />
-        <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/fragment_report.xml" value="0.25" />
+        <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/fragment_report.xml" value="0.14" />
         <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/fragment_report_one.xml" value="0.2" />
         <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/home_fragment.xml" value="0.23697916666666666" />
         <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/item_report_glicemy.xml" value="0.33" />

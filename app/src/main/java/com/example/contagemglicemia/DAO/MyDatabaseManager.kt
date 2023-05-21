@@ -3,9 +3,7 @@ package com.example.contagemglicemia.DAO
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import com.example.contagemglicemia.Model.Alimento
-import com.example.contagemglicemia.Model.Configuracao
-import com.example.contagemglicemia.Model.Glicemia
+import com.example.contagemglicemia.Model.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -166,5 +164,42 @@ class MyDatabaseManager(context: Context) {
             }
         }
         return list
+    }
+
+    fun updateCarboAlimento(carboAlimento: CarboAlimento) {
+        val db = dbHelper.writableDatabase
+        val refeicoes = mapOf(
+            "Cafe" to carboAlimento.cafe,
+            "LancheM" to carboAlimento.lancheM,
+            "Almoco" to carboAlimento.almoco,
+            "LancheT" to carboAlimento.lancheT,
+            "Jantar" to carboAlimento.jantar,
+            "Ceia" to carboAlimento.ceia
+        )
+
+        for ((refeicao, quantidade) in refeicoes) {
+            val values = ContentValues().apply {
+                put("qtd_carboidrato", quantidade)
+            }
+            db.update("alimentos", values, "id_nome=?", arrayOf(refeicao))
+        }
+        db.close()
+    }
+
+    fun updateConfig(configModel: ConfigModel) {
+        val db = dbHelper.writableDatabase
+        val configs = mapOf(
+            "1" to configModel.glicemiaAlvo,
+            "2" to configModel.fatorSensibilidade,
+            "3" to configModel.relacaoCarbo
+        )
+
+        for ((config, quantidade) in configs) {
+            val values = ContentValues().apply {
+                put("valor", quantidade)
+            }
+            db.update("config", values, "id=?", arrayOf(config))
+        }
+        db.close()
     }
 }

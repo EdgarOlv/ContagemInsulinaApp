@@ -4,24 +4,29 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.ImageButton
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.viewpager2.widget.ViewPager2
 import com.example.contagemglicemia.Modules.Report.pages.page1.ReportOne
-import com.example.contagemglicemia.R
+import com.example.contagemglicemia.ViewPagerAdapter
 import com.example.contagemglicemia.databinding.FragmentReportBinding
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 
 class ReportFragment : Fragment() {
 
     private lateinit var binding: FragmentReportBinding
-    private lateinit var drawerLayout: DrawerLayout
-    private lateinit var navView: NavigationView
-    private lateinit var fab: FloatingActionButton
-    private lateinit var toggle: ActionBarDrawerToggle
+    lateinit var tabs: TabLayout
+    private lateinit var viewPager: ViewPager2
+
+    private val titleTabList = arrayOf(
+        "Relatório",
+        "Gráfico",
+        "Análise"
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,43 +39,47 @@ class ReportFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentReportBinding.inflate(inflater, container, false)
-        drawerLayout = binding.drawerLayout
-        navView = binding.navigationView
-        fab = binding.fabMenu
+        val view = binding.root
 
-        fab.setOnClickListener {
+        // menuButton = binding.menuButton
+
+        /*menuButton.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
-            fab.visibility = View.GONE
-        }
+            //menuButton.visibility = View.GONE
+            Toast.makeText(requireContext(), "Botão clicado!", Toast.LENGTH_SHORT).show()
 
-        navView.setNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.menu_item_1 -> {
-                    Toast.makeText(context, "Item 1", Toast.LENGTH_SHORT).show()
-                    val fragment = ReportOne()
-                    childFragmentManager.beginTransaction().replace(R.id.content_frame, fragment)
-                        .commit()
-                    drawerLayout.closeDrawers()
-                    true
-                }
-                R.id.menu_item_2 -> {
-                    // código para lidar com o clique no itm 2do menu
-                    true
-                }
-                // adicione mais itens do menu aqui
-                else -> false
-            }
-        }
+        }*/
 
-        toggle = object : ActionBarDrawerToggle(requireActivity(), drawerLayout, null, 0, 0) {
-            override fun onDrawerClosed(view: View) {
-                fab.visibility = View.VISIBLE
-            }
-        }
+        CallReportData()
 
-        drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
+        val fragmentList = mutableListOf(
+            ReportOne.newInstance(),
+            ReportOne.newInstance(),
+            ReportOne.newInstance()
+        )
+        val viewPagerAdapter = ViewPagerAdapter(
+            fragmentList,
+            requireActivity().supportFragmentManager,
+            lifecycle
+        )
 
-        return binding.root
+        viewPager = binding.viewPagerReport
+        viewPager.adapter = viewPagerAdapter
+
+        tabs = binding.tabsConsumerUnit
+        TabLayoutMediator(tabs, viewPager) { tab, position ->
+            tab.text = titleTabList[position]
+        }.attach()
+
+        return view
+    }
+
+    private fun CallReportData() {
+        // Toast.makeText(context, "Item 1", Toast.LENGTH_SHORT).show()
+        val fragment = ReportOne()
+    }
+
+    companion object {
+        fun newInstance() = ReportFragment()
     }
 }

@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.contagemglicemia.DAO.MyDatabaseManager
+import com.example.contagemglicemia.Modules.Report.ReportFragment
 import com.example.contagemglicemia.Modules.Report.pages.page1.adapter.RegistroGlicemiaAdapter
 import com.example.contagemglicemia.databinding.FragmentReportOneBinding
 
@@ -46,5 +47,9 @@ class ReportOne : Fragment() {
             Log.i(TAG, "onViewCreated: Clicou no registro ${registro.id}")
         }
         recyclerView.adapter = adapter
+    }
+
+    companion object {
+        fun newInstance() = ReportOne()
     }
 }

@@ -12,6 +12,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.contagemglicemia.DAO.MyDatabaseHelper
 import com.example.contagemglicemia.DAO.MyDatabaseManager
+import com.example.contagemglicemia.Model.CarboAlimento
+import com.example.contagemglicemia.Model.ConfigModel
 import com.example.contagemglicemia.databinding.FragmentConfigBinding
 import java.io.*
 
@@ -27,7 +29,6 @@ class ConfigFragment : Fragment() {
     val PICK_FILE_REQUEST_CODE = -1
     var DATABASE_NAME = ""
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dbManager = MyDatabaseManager(requireContext())
@@ -40,13 +41,13 @@ class ConfigFragment : Fragment() {
                     3 -> relacaoCarboidrato = it.value
                 }
             }
-            dbManager.getAlimentoData().forEach {
+            /*dbManager.getAlimentoData().forEach {
                 when (it.id) {
                     1 -> binding.campoFood1.setText(it.qtd_carboidrato.toString())
                     2 -> binding.campoFood2.setText(it.qtd_carboidrato.toString())
                     3 -> binding.campoFood3.setText(it.qtd_carboidrato.toString())
                 }
-            }
+            }*/
         } catch (e: Exception) {
         }
     }
@@ -78,20 +79,36 @@ class ConfigFragment : Fragment() {
         binding.campoFatorSensibilidade.setText(fatorSensibilidade.toString())
         binding.campoRelacaoCarboidrato.setText(relacaoCarboidrato.toString())
         binding.buttonSaveConfig.setOnClickListener {
-            // TODO: Pegar cada campo e salvar em objeto e em banco
-            Toast.makeText(context, "Botao Salvar cliado", Toast.LENGTH_SHORT).show()
+            val valoresCarbo = CarboAlimento(
+                binding.campoFood1.text.toString().toInt(),
+                binding.campoFood2.text.toString().toInt(),
+                binding.campoFood3.text.toString().toInt(),
+                binding.campoFood4.text.toString().toInt(),
+                binding.campoFood5.text.toString().toInt(),
+                binding.campoFood6.text.toString().toInt()
+            )
+            dbManager.updateCarboAlimento(valoresCarbo)
+
+            val valoresConfig = ConfigModel(
+                binding.campoGlicemiaAlvo.text.toString().toInt(),
+                binding.campoFatorSensibilidade.text.toString().toInt(),
+                binding.campoFatorSensibilidade.text.toString().toInt()
+            )
+            dbManager.updateConfig(valoresConfig)
+
+            Toast.makeText(context, "Editado com sucesso!!", Toast.LENGTH_SHORT).show()
         }
 
-        binding.buttonExport.setOnClickListener{
+        binding.buttonExport.setOnClickListener {
             exportDatabase(requireContext(), MyDatabaseHelper(requireContext()).nameDatabase())
         }
 
-        binding.buttonImport.setOnClickListener{
+        binding.buttonImport.setOnClickListener {
             DATABASE_NAME = MyDatabaseHelper(requireContext()).nameDatabase()
             importDatabase()
         }
 
-        binding.buttonDeleteAll.setOnClickListener{
+        binding.buttonDeleteAll.setOnClickListener {
             dbManager.deleteAllData()
             Toast.makeText(context, "Banco de dados limpo com sucesso!", Toast.LENGTH_SHORT).show()
         }
@@ -148,5 +165,7 @@ class ConfigFragment : Fragment() {
         }
     }
 
-
+    companion object {
+        fun newInstance() = ConfigFragment()
+    }
 }

@@ -14,8 +14,7 @@ import androidx.fragment.app.Fragment
 import com.example.contagemglicemia.DAO.MyDatabaseManager
 import com.example.contagemglicemia.Model.Alimento
 import com.example.contagemglicemia.databinding.FragmentHomeBinding
-import java.math.RoundingMode
-import java.text.DecimalFormat
+import java.util.*
 
 class HomeFragment : Fragment() {
 
@@ -23,11 +22,11 @@ class HomeFragment : Fragment() {
     private lateinit var dbManager: MyDatabaseManager
     var TAG = "HomeFragment"
 
-    // private lateinit var viewModel: HomeViewModel
     var glicemaAlvo = 0
     var fatorSensibilidade = 0
     var relacaoCarboidrato = 0
     var resultadoInsulina = 0.0
+    var resultadoTexto = ""
 
     var listOfAliments: List<Alimento> = mutableListOf()
     var alimentSelected = Alimento(0, "", "", 0)
@@ -55,9 +54,6 @@ class HomeFragment : Fragment() {
             }
         }
 
-        // val viewModelFactory = HomeViewModel.Factory()
-        // viewModel = ViewModelProvider(this, viewModelFactory)            .get(HomeViewModel::class.java)
-
         // Carregar dados config (viewmodel)
         // Carregar Firebase
     }
@@ -79,6 +75,9 @@ class HomeFragment : Fragment() {
         checkBox = binding.checkboxCorrigir
         checkBox.isChecked = true
 
+        binding.checkboxAlimentar.isChecked = true
+        getActualAlimentation()
+
         bindingCalcular(view)
 
         binding.checkboxAlimentar.setOnClickListener {
@@ -86,8 +85,6 @@ class HomeFragment : Fragment() {
                 selectAlimentation()
             }
         }
-
-        // val alimento = viewModel.getAlimentation(requireContext())
     }
 
     private fun selectAlimentation() {
@@ -103,6 +100,24 @@ class HomeFragment : Fragment() {
         builder.show()
     }
 
+    private fun getActualAlimentation() {
+        val opcoes = dbManager.getAlimentoData()
+
+        val calendar = Calendar.getInstance()
+        val horaAtual = calendar.get(Calendar.HOUR_OF_DAY)
+
+        val refeicao: Alimento = when {
+            horaAtual < 9 -> opcoes[0]
+            horaAtual < 12 -> opcoes[1]
+            horaAtual < 15 -> opcoes[2]
+            horaAtual < 18 -> opcoes[3]
+            horaAtual < 20 -> opcoes[4]
+            else -> opcoes[5]
+        }
+        alimentSelected = refeicao
+        binding.textViewTipoRefeicao.setText(refeicao.name)
+    }
+
     private fun bindingCalcular(view: View) {
         binding.buttonCalcular.setOnClickListener() {
             val valorDigitado = binding.editText.text.toString().toInt()
@@ -110,21 +125,27 @@ class HomeFragment : Fragment() {
 
             try {
                 if (valorDigitado != 0) {
-
                     resultadoInsulina = 0.0
+                    resultadoTexto = ""
                     if (binding.checkboxCorrigir.isChecked) {
-                        resultadoInsulina +=
-                            ((valorDigitado.toDouble() - glicemaAlvo) / fatorSensibilidade)
+                        val result = ((valorDigitado.toDouble() - glicemaAlvo) / fatorSensibilidade)
+                        resultadoInsulina += result
+                        resultadoTexto += String.format("Correção = %.2f UI \n", result)
                     }
                     if (binding.checkboxAlimentar.isChecked) {
-                        resultadoInsulina +=
-                            (alimentSelected.qtd_carboidrato.toDouble() / relacaoCarboidrato)
+                        val result = (alimentSelected.qtd_carboidrato.toDouble() / relacaoCarboidrato)
+                        resultadoInsulina += result
+                        resultadoTexto += String.format("Alimento = %.2f UI\n", result)
                     }
                     if (binding.checkboxMalhar.isChecked) {
+                        val result = acaoTreino(valorDigitado.toDouble())
+                        resultadoTexto += "e $result \n"
+                        resultadoInsulina = resultadoInsulina / 2
                     }
 
                     dbManager.insertGlycemia(valorDigitado, resultadoInsulina.toInt())
-                    campoResultado.setText(String.format("Aplicar %.2f UI", resultadoInsulina))
+                    resultadoTexto += String.format("Aplicar %.2f UI", resultadoInsulina)
+                    campoResultado.setText(resultadoTexto)
 
                     val imm =
                         requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -136,9 +157,32 @@ class HomeFragment : Fragment() {
         }
     }
 
-    fun roundOffDecimal(number: Double): Double? {
+    fun acaoTreino(valorGlicemia: Double): String {
+        if (valorGlicemia <= 70.0) {
+            return "Adiar o treino"
+        }
+        if (valorGlicemia > 70.0 && valorGlicemia <= 100.0) {
+            return "25g a 50g Carb. antes do treino"
+        }
+        if (valorGlicemia > 100.0 && valorGlicemia <= 180.0) {
+            return "20g a 50g Carb. antes do treino"
+        }
+        if (valorGlicemia > 180.0 && valorGlicemia <= 300.0) {
+            return "15g antes do treino"
+        }
+        if (valorGlicemia > 300.0) {
+            return "Adiar o treino"
+        } else {
+            return ""
+        }
+    }
+    /*fun roundOffDecimal(number: Double): Double? {
         val df = DecimalFormat("#.##")
         df.roundingMode = RoundingMode.CEILING
         return df.format(number).toDouble()
+    }*/
+
+    companion object {
+        fun newInstance() = HomeFragment()
     }
 }
