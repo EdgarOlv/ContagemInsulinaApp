@@ -1,10 +1,11 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id("com.google.gms.google-services")
 }
 
 android {
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.example.contagemglicemia"
@@ -22,6 +23,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/atomicfu.kotlin_module'
+        exclude 'META-INF/DEPENDENCIES'
+
+    }
     buildFeatures {
         dataBinding = true
         viewBinding true
@@ -35,16 +42,42 @@ android {
     }
 }
 
+
+
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.databinding:databinding-runtime:8.1.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    implementation 'androidx.sqlite:sqlite:2.3.0'
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'androidx.sqlite:sqlite:2.3.1'
+    implementation 'com.google.android.material:material:1.9.0'
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.22"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.7.2"
+    implementation "androidx.navigation:navigation-ui-ktx:2.7.2"
+
+    implementation 'com.google.firebase:firebase-bom:32.3.1'
+    implementation 'com.google.firebase:firebase-analytics:21.3.0'
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.8.1'
+    implementation 'com.google.firebase:firebase-auth:22.1.2'
+
+
+    implementation 'com.google.api-client:google-api-client:1.32.1'
+    implementation 'com.google.oauth-client:google-oauth-client-jetty:1.32.1'
+    implementation 'com.google.apis:google-api-services-sheets:v4-rev612-1.25.0'
+    implementation 'com.android.volley:volley:1.2.1'
+    implementation 'com.google.api-client:google-api-client-android:1.31.3'
+
+    // Dependências do Google HTTP Client
+    implementation 'com.google.http-client:google-http-client:1.39.1'
+    implementation 'com.google.http-client:google-http-client-gson:1.39.1'
+
+
 
 }

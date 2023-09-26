@@ -1,14 +1,16 @@
 package com.example.contagemglicemia
 
-import android.graphics.Color
 import android.os.Bundle
-import androidx.appcompat.widget.Toolbar
+import android.text.Html
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
+import com.example.contagemglicemia.Login.Testes_Firebase
 import com.example.contagemglicemia.Modules.Config.ConfigFragment
 import com.example.contagemglicemia.Modules.Home.HomeFragment
 import com.example.contagemglicemia.Modules.Report.ReportFragment
 import com.example.contagemglicemia.databinding.ActivityMainBinding
+import com.google.firebase.FirebaseApp
+import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,12 +22,17 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        supportActionBar?.setTitle("Contagem de Glicemia")
+        FirebaseApp.initializeApp(this)
+
+
+        supportActionBar?.title =
+            Html.fromHtml("<font color=\"#FFFFFF\">Contagem de Glicemia</font>")
 
         val fragmentList = mutableListOf(
             HomeFragment.newInstance(),
             ConfigFragment.newInstance(),
-            ReportFragment.newInstance()
+            ReportFragment.newInstance(),
+            Testes_Firebase.newInstance()
         )
         val viewPagerAdapter = ViewPagerAdapter(
             fragmentList,
@@ -42,6 +49,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.glicemia -> 0
                 R.id.configuracao -> 1
                 R.id.relatorio -> 2
+                R.id.firebase -> 3
                 else -> throw IllegalArgumentException("Unknown menu item")
             }
 
