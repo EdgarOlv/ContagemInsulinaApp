@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.contagemglicemia.DAO.FirebaseDB
 import com.example.contagemglicemia.DAO.MyDatabaseGSheets
 import com.example.contagemglicemia.DAO.MyDatabaseManager
 import com.example.contagemglicemia.Model.Alimento
@@ -29,6 +30,7 @@ class HomeFragment : Fragment() {
     private lateinit var dbGSheets: MyDatabaseGSheets
     private lateinit var viewModel: HomeViewModel
     private lateinit var db: FirebaseFirestore
+    private lateinit var firebaseDb: FirebaseDB
 
 
     var alimentSelected = Alimento(0, "", "", 0)
@@ -38,11 +40,14 @@ class HomeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dbManager = MyDatabaseManager(requireContext())
+        firebaseDb = FirebaseDB()
 
         db = FirebaseFirestore.getInstance()
 
         setupViewModel()
         viewModel.iniciaDadosBanco(requireContext())
+
+        firebaseDb.ReceberListNuvem(requireContext())
     }
 
     override fun onCreateView(

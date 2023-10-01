@@ -6,12 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager2.widget.ViewPager2
-import com.example.contagemglicemia.Modules.Report.ReportFragment
-import com.example.contagemglicemia.Modules.Report.pages.page1.ReportOne
-import com.example.contagemglicemia.Modules.Report.pages.page2.ReportTwo
-import com.example.contagemglicemia.R
 import com.example.contagemglicemia.ViewPagerAdapter
-import com.example.contagemglicemia.databinding.FragmentReportBinding
 import com.example.contagemglicemia.databinding.FragmentTestesFirebaseBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator

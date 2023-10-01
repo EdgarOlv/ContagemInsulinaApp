@@ -1,15 +1,19 @@
 package com.example.contagemglicemia.Modules.Home
 
 import android.content.Context
-import android.graphics.Color
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.contagemglicemia.DAO.FirebaseDB
 import com.example.contagemglicemia.DAO.MyDatabaseGSheets
 import com.example.contagemglicemia.DAO.MyDatabaseManager
 import com.example.contagemglicemia.Model.Alimento
-import com.google.android.material.snackbar.Snackbar
+import com.example.contagemglicemia.Model.Glicemia
+import com.example.contagemglicemia.Model.toGlicemiaCloud
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -17,9 +21,8 @@ class HomeViewModel : ViewModel() {
 
     private lateinit var dbManager: MyDatabaseManager
     private var dbGsheets: MyDatabaseGSheets? = null
-    //val database = FirebaseFirestore.getInstance()
+    private lateinit var firebaseDb: FirebaseDB
 
-    //val glicemiaRef = database.getReference("glicemias")
 
     var glicemaAlvo = 0
     var fatorSensibilidade = 0
@@ -31,6 +34,7 @@ class HomeViewModel : ViewModel() {
 
     fun iniciaDadosBanco(context: Context) {
         dbManager = MyDatabaseManager(context)
+        firebaseDb = FirebaseDB()
         dbGsheets = MyDatabaseGSheets(context)
         dbGsheets?.connectDB(context)
 
@@ -162,9 +166,17 @@ class HomeViewModel : ViewModel() {
                     resultadoTexto += String.format("Aplicar %.2f UI", resultadoInsulina)
                 }
 
-                dbManager.insertGlycemia(valorDigitado, resultadoInsulina.toInt())
+                val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
+                val date = Date()
+                val dateString = dateFormat.format(date)
 
-                InserirEmNuvem(context, valorDigitado, db)
+                val newGlicemia = Glicemia(0, valorDigitado, dateString, resultadoInsulina.toInt())
+
+                dbManager.insertGlycemia(newGlicemia)
+
+                firebaseDb.InserirEmNuvem(context, newGlicemia)
+
+                val lista =
 
                 return resultadoTexto
             }
@@ -172,43 +184,6 @@ class HomeViewModel : ViewModel() {
             return "Erro" + e
         }
         return "Erro"
-    }
-
-    private fun InserirEmNuvem(
-        context: Context,
-        valorDigitado: Int,
-        db: FirebaseFirestore
-    ) {
-        try {
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-            val date = Date()
-            val dateString = dateFormat.format(date)
-
-            /*dbGsheets?.insertGlicemiaNuvem(
-                context,
-                Glicemia(0, valorDigitado, dateString, resultadoInsulina.toInt())
-            )*/
-/*
-            val glicemy = hashMapOf(
-                "value" to valorDigitado,
-                "date" to dateString.toString(),
-                "insulin_apply" to resultadoInsulina.toInt()
-            )
-
-            db.collection("glicemia")
-                .add(glicemy)
-                .addOnSuccessListener { documentReference ->
-                    Toast.makeText(context, "Inserido com sucesso!! \n ID:${documentReference.id} ", Toast.LENGTH_SHORT).show()
-                }
-                .addOnFailureListener { e ->
-                    Toast.makeText(context, "Erro ao inserir!", Toast.LENGTH_SHORT).show()
-                }*/
-            //db.child("users").child(userId).setValue(user)
-
-
-        } catch (e: Exception) {
-            Toast.makeText(context, "Erro ao inserir na nuvem", Toast.LENGTH_SHORT).show()
-        }
     }
 
     fun acaoTreino(valorGlicemia: Double): String {

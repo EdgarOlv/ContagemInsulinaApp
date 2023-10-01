@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.contagemglicemia.databinding.FragmentLoginBinding
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 
@@ -85,7 +86,7 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun actionConect() {
+    private fun actionConect(){
         val user = binding.editTextUsername.text.toString()
         val key = binding.editTextPassword.text.toString()
         if (user.isEmpty() || key.isEmpty()) {

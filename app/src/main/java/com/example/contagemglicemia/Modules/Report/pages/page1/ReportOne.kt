@@ -8,10 +8,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.contagemglicemia.DAO.FirebaseDB
 import com.example.contagemglicemia.DAO.MyDatabaseManager
-import com.example.contagemglicemia.Modules.Report.ReportFragment
 import com.example.contagemglicemia.Modules.Report.pages.page1.adapter.RegistroGlicemiaAdapter
 import com.example.contagemglicemia.databinding.FragmentReportOneBinding
+
 
 class ReportOne : Fragment() {
 
@@ -19,6 +21,8 @@ class ReportOne : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var dbManager: MyDatabaseManager
     val TAG = "ReportOne"
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    private lateinit var firebaseDb: FirebaseDB
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,13 +44,28 @@ class ReportOne : Fragment() {
 
         recyclerView = binding.recycleViewGlicemy
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        swipeRefreshLayout = binding.swipeRefreshLayout
+        firebaseDb = FirebaseDB()
 
+        firebaseDb.ReceberListNuvem(requireContext())
         val registros = dbManager.getAllGlicemy()
         val adapter = RegistroGlicemiaAdapter(registros) { registro ->
             // mostrar observações do registro
             Log.i(TAG, "onViewCreated: Clicou no registro ${registro.id}")
         }
         recyclerView.adapter = adapter
+
+        swipeRefreshLayout.setOnRefreshListener {
+            firebaseDb.ReceberListNuvem(requireContext())
+
+            val registros = dbManager.getAllGlicemy()
+            val adapter = RegistroGlicemiaAdapter(registros){ registro ->
+                // mostrar observações do registro
+                Log.i(TAG, "onViewCreated: Clicou no registro ${registro.id}")
+            }
+            recyclerView.adapter = adapter
+            swipeRefreshLayout.isRefreshing = false
+        }
     }
 
     companion object {
