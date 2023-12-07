@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Modules.Home.HomeFragment">
+    tools:context=".modules.Home.HomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -14,7 +14,7 @@
             android:id="@+id/text_view_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="30dp"
             android:text="Insira a glicemia atual"
             android:textSize="30sp"
             android:textStyle="bold"
@@ -50,93 +50,108 @@
             app:layout_constraintVertical_bias="0.59000003" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/checkboxes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editText">
-
-            <CheckBox
-                android:id="@+id/checkbox_corrigir"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:textSize= "20sp"
-                android:text="@string/corrigir"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:id="@+id/selectionFunctions"
+                android:background="@drawable/shape_item"
+                android:layout_margin="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/editText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-            <CheckBox
-                android:id="@+id/checkbox_alimentar"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/checkboxes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <CheckBox
+                        android:id="@+id/checkbox_corrigir"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/corrigir"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <CheckBox
+                        android:id="@+id/checkbox_alimentar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text="@string/alimentar"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/checkbox_corrigir"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <CheckBox
+                        android:id="@+id/checkbox_malhar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text="@string/malhar"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/checkbox_alimentar"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout_refeicao"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:textSize= "20sp"
-                android:text="@string/alimentar"
+                android:layout_marginBottom="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/checkbox_corrigir" />
-
-            <CheckBox
-                android:id="@+id/checkbox_malhar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:textSize= "20sp"
-                android:text="@string/malhar"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/checkbox_alimentar" />
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayout_refeicao"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/checkboxes">
-
-            <TextView
-                android:id="@+id/text_view_refeicao_atual"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle= "bold"
-                android:text="Refeição atual: "
-                android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/checkboxes">
 
-            <TextView
-                android:id="@+id/text_view_tipo_refeicao"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tipo refeição"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                <TextView
+                    android:id="@+id/text_view_refeicao_atual"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Refeição atual: "
+                    android:textSize="20sp"
+                    android:textStyle="bold"
 
-        </LinearLayout>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/text_view_tipo_refeicao"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tipo refeição"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+            </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
             android:id="@+id/button_calcular"
             android:layout_width="250dp"
             android:layout_height="80dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="40dp"
             android:text="Calcular"
             android:backgroundTint="@color/blue_500"
             android:textColor="@color/white"
             android:textSize="20sp"
+            android:background="@drawable/shape_item"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout_refeicao" />
+            app:layout_constraintTop_toBottomOf="@+id/selectionFunctions" />
 
         <TextView
             android:id="@+id/text_view_result"
@@ -145,7 +160,7 @@
             android:text="Resultado: "
             android:textSize="30sp"
             android:textStyle="bold"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/button_calcular" />
@@ -155,7 +170,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="26sp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -163,10 +178,6 @@
             app:suffixText="U.I."
             tools:text="Aplicar x U.I" />
 
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
 </FrameLayout>

@@ -16,12 +16,18 @@
         <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/activity_splash_screen.xml" value="0.1265625" />
         <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/dialog_options_food.xml" value="0.1453125" />
         <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/fragment_config.xml" value="0.33" />
-        <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/fragment_home.xml" value="0.25" />
+        <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/fragment_firestore_database.xml" value="0.2671875" />
+        <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/fragment_home.xml" value="0.22" />
+        <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/fragment_login.xml" value="0.22447916666666667" />
         <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/fragment_report.xml" value="0.14" />
         <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/fragment_report_one.xml" value="0.2" />
+        <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/fragment_report_two.xml" value="0.2" />
+        <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/fragment_testes__firebase.xml" value="0.28125" />
+        <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/fragment_testes_firebase.xml" value="0.28125" />
         <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/home_fragment.xml" value="0.23697916666666666" />
         <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/item_report_glicemy.xml" value="0.33" />
         <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/layout_card_loading_points.xml" value="0.30572916666666666" />
+        <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/list_item_layout.xml" value="0.28020833333333334" />
         <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/menu_lateral.xml" value="0.15572916666666667" />
         <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/menu_report.xml" value="0.1546875" />
         <entry key="..\:/Android/ContagemGlicemia/app/src/main/res/layout/report_fragment.xml" value="0.2359375" />

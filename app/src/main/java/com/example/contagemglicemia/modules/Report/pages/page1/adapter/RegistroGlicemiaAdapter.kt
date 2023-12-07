@@ -1,13 +1,12 @@
-package com.example.contagemglicemia.Modules.Report.pages.page1.adapter
+package com.example.contagemglicemia.modules.Report.pages.page1.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.contagemglicemia.Model.Glicemia
+import com.example.contagemglicemia.model.Glicemia
 import com.example.contagemglicemia.R
-import java.text.SimpleDateFormat
 
 class RegistroGlicemiaAdapter(val registros: List<Glicemia>, val onItemClick: (Glicemia) -> Unit) : RecyclerView.Adapter<RegistroGlicemiaAdapter.RegistroGlicemiaViewHolder>() {
 
@@ -25,9 +24,6 @@ class RegistroGlicemiaAdapter(val registros: List<Glicemia>, val onItemClick: (G
 
     override fun onBindViewHolder(holder: RegistroGlicemiaViewHolder, position: Int) {
         val registro = registros[position]
-
-        val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
-       // val dataFormatada = dateFormat.format(registro.date)
 
         holder.textViewValor.text = registro.value.toString()
         holder.textViewInsulina.text = registro.insulina_apply.toString()

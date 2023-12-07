@@ -1,10 +1,8 @@
-package com.example.contagemglicemia.DAO
+package com.example.contagemglicemia.dao
 
-import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import androidx.core.content.ContentProviderCompat.requireContext
 
 class MyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 

@@ -1,11 +1,12 @@
-package com.example.contagemglicemia.DAO
+package com.example.contagemglicemia.dao
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import com.example.contagemglicemia.Model.*
+import com.example.contagemglicemia.model.*
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 class MyDatabaseManager(context: Context) {
 
@@ -69,16 +70,13 @@ class MyDatabaseManager(context: Context) {
         db.close()
     }
 
-    fun insertGlycemia(value: Int, resultadoInsulina: Int) {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        val date = Date()
-        val dateString = dateFormat.format(date)
+    fun insertGlycemia(glicemia: Glicemia) {
 
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
-            put("valor", value)
-            put("data", dateString)
-            put("insulina_aplicada", resultadoInsulina)
+            put("valor", glicemia.value)
+            put("data", glicemia.date)
+            put("insulina_aplicada", glicemia.insulina_apply)
         }
         db.insert("glicemias", null, values)
         // db.close()
@@ -106,10 +104,9 @@ class MyDatabaseManager(context: Context) {
         db.close()
     }
 
-    fun queryData(): Cursor {
-        val db = dbHelper.readableDatabase
-        val cursor = db.query("mytable", null, null, null, null, null, null)
-        return cursor
+    fun convertStringToDate(dateString: String): Date {
+        val format = SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault())
+        return format.parse(dateString) ?: Date()
     }
 
     fun getAllGlicemy(): List<Glicemia> {
@@ -131,6 +128,21 @@ class MyDatabaseManager(context: Context) {
         }
 
         return list
+    }
+
+    fun getAllGlicemyDates(): List<String> {
+        val db = dbHelper.readableDatabase
+        val cursor = db.rawQuery("SELECT data FROM glicemias", null)
+        val datesList = mutableListOf<String>()
+
+        with(cursor) {
+            while (moveToNext()) {
+                val data = getString(getColumnIndexOrThrow("data"))
+                datesList.add(data)
+            }
+        }
+
+        return datesList
     }
 
     fun getConfigData(): List<Configuracao> {

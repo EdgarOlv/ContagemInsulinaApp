@@ -1,6 +1,4 @@
-package com.example.contagemglicemia.Model
-
-import java.util.*
+package com.example.contagemglicemia.model
 
 data class Alimento(
     var id: Int,

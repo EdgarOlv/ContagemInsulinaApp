@@ -1,4 +1,4 @@
-package com.example.contagemglicemia.DAO
+package com.example.contagemglicemia.dao
 
 object TableGlicemia {
     const val TABLE_NAME = "glicemias"

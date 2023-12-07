@@ -1,7 +1,6 @@
-package com.example.contagemglicemia.Modules.Config
+package com.example.contagemglicemia.modules.Config
 
 import android.app.Activity
-import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -10,17 +9,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.example.contagemglicemia.DAO.MyDatabaseHelper
-import com.example.contagemglicemia.DAO.MyDatabaseManager
-import com.example.contagemglicemia.Model.CarboAlimento
-import com.example.contagemglicemia.Model.ConfigModel
+import com.example.contagemglicemia.dao.MyDatabaseHelper
+import com.example.contagemglicemia.dao.MyDatabaseManager
+import com.example.contagemglicemia.model.CarboAlimento
+import com.example.contagemglicemia.model.ConfigModel
 import com.example.contagemglicemia.databinding.FragmentConfigBinding
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import java.io.*
 
 class ConfigFragment : Fragment() {
 
     private lateinit var binding: FragmentConfigBinding
     private lateinit var dbManager: MyDatabaseManager
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     var glicemaAlvo = 110
     var fatorSensibilidade = 37
@@ -50,6 +53,16 @@ class ConfigFragment : Fragment() {
             }*/
         } catch (e: Exception) {
         }
+
+        firebaseAnalytics = Firebase.analytics
+        firebaseAnalytics = FirebaseAnalytics.getInstance(requireContext())
+
+        val params = Bundle()
+        params.putString(FirebaseAnalytics.Param.ITEM_ID, "1")
+        params.putString(FirebaseAnalytics.Param.ITEM_NAME, "edgar")
+        params.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
+
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, params)
     }
 
     override fun onCreateView(
@@ -142,6 +155,7 @@ class ConfigFragment : Fragment() {
         startActivityForResult(intent, PICK_FILE_REQUEST_CODE)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PICK_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {

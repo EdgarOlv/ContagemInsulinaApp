@@ -1,12 +1,12 @@
-package com.example.contagemglicemia.Modules.Home
+package com.example.contagemglicemia.modules.Config
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
-import com.example.contagemglicemia.DAO.MyDatabaseManager
-import com.example.contagemglicemia.Model.Alimento
+import com.example.contagemglicemia.dao.MyDatabaseManager
+import com.example.contagemglicemia.model.Alimento
 import java.util.*
 
-class HomeViewModel : ViewModel() {
+class ConfigViewModel : ViewModel() {
 
     private lateinit var dbManager: MyDatabaseManager
 

@@ -1,18 +1,17 @@
-package com.example.contagemglicemia.Modules.Report
+package com.example.contagemglicemia.modules.Report
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
-import com.example.contagemglicemia.Modules.Report.pages.page1.ReportOne
+import com.example.contagemglicemia.modules.Report.pages.page1.ReportOne
+import com.example.contagemglicemia.modules.Report.pages.page2.ReportTwo
+import com.example.contagemglicemia.modules.Report.pages.page3.ReportThree
+import com.example.contagemglicemia.R
 import com.example.contagemglicemia.ViewPagerAdapter
 import com.example.contagemglicemia.databinding.FragmentReportBinding
-import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -54,8 +53,8 @@ class ReportFragment : Fragment() {
 
         val fragmentList = mutableListOf(
             ReportOne.newInstance(),
-            ReportOne.newInstance(),
-            ReportOne.newInstance()
+            ReportTwo.newInstance(),
+            ReportThree.newInstance()
         )
         val viewPagerAdapter = ViewPagerAdapter(
             fragmentList,
@@ -66,10 +65,26 @@ class ReportFragment : Fragment() {
         viewPager = binding.viewPagerReport
         viewPager.adapter = viewPagerAdapter
 
-        tabs = binding.tabsConsumerUnit
+        tabs = binding.tabsChoiceReport
         TabLayoutMediator(tabs, viewPager) { tab, position ->
             tab.text = titleTabList[position]
         }.attach()
+
+        binding.tabsChoiceReport.setOnClickListener {
+            val itemId = it.id
+
+            val position = when (itemId) {
+                R.id.glicemia -> 0
+                R.id.configuracao -> 1
+                R.id.relatorio -> 2
+                R.id.firebase -> 3
+                else -> throw IllegalArgumentException("Unknown menu item")
+            }
+
+            viewPager.setCurrentItem(position, true)
+
+            true
+        }
 
         return view
     }

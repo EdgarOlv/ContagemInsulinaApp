@@ -1,4 +1,4 @@
-package com.example.contagemglicemia.Modules.Report.pages.page1
+package com.example.contagemglicemia.modules.Report.pages.page1
 
 import android.os.Bundle
 import android.util.Log
@@ -8,10 +8,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.contagemglicemia.DAO.MyDatabaseManager
-import com.example.contagemglicemia.Modules.Report.ReportFragment
-import com.example.contagemglicemia.Modules.Report.pages.page1.adapter.RegistroGlicemiaAdapter
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.contagemglicemia.dao.FirebaseDB
+import com.example.contagemglicemia.dao.MyDatabaseManager
 import com.example.contagemglicemia.databinding.FragmentReportOneBinding
+import com.example.contagemglicemia.modules.Report.pages.page1.adapter.RegistroGlicemiaAdapter
 
 class ReportOne : Fragment() {
 
@@ -19,6 +20,8 @@ class ReportOne : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var dbManager: MyDatabaseManager
     val TAG = "ReportOne"
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    private lateinit var firebaseDb: FirebaseDB
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +32,7 @@ class ReportOne : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentReportOneBinding.inflate(inflater, container, false)
         return binding.root
@@ -40,13 +43,27 @@ class ReportOne : Fragment() {
 
         recyclerView = binding.recycleViewGlicemy
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        swipeRefreshLayout = binding.swipeRefreshLayout
+        firebaseDb = FirebaseDB()
 
+        firebaseDb.ReceberListNuvem(requireContext())
         val registros = dbManager.getAllGlicemy()
+
         val adapter = RegistroGlicemiaAdapter(registros) { registro ->
-            // mostrar observações do registro
             Log.i(TAG, "onViewCreated: Clicou no registro ${registro.id}")
         }
         recyclerView.adapter = adapter
+
+        swipeRefreshLayout.setOnRefreshListener {
+            firebaseDb.ReceberListNuvem(requireContext())
+
+            val registros = dbManager.getAllGlicemy()
+            val adapter = RegistroGlicemiaAdapter(registros) { registro ->
+                Log.i(TAG, "onViewCreated: Clicou no registro ${registro.id}")
+            }
+            recyclerView.adapter = adapter
+            swipeRefreshLayout.isRefreshing = false
+        }
     }
 
     companion object {

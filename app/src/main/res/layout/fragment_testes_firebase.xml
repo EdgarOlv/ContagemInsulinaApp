@@ -14,7 +14,7 @@
             android:id="@+id/toolbar_create"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/tabs_firebase"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/ic_arrow_white"
@@ -24,7 +24,7 @@
             app:titleTextColor="@color/white" />
 
         <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs_choice_report"
+            android:id="@+id/tabs_firebase"
             style="@style/AppTheme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
             app:layout_constraintTop_toTopOf="parent" />-->
 
         <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/view_pager_report"
+            android:id="@+id/view_pager_firebase"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
