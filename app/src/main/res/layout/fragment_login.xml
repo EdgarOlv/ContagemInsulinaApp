@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Modules.Home.HomeFragment">
+    tools:context=".modules.Home.HomeFragment">
 
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
@@ -46,18 +46,6 @@
         android:layout_marginBottom="16dp" />
 
     <Button
-        android:id="@+id/buttonCad"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Cadastro"
-
-        app:layout_constraintTop_toBottomOf="@+id/editTextPassword"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp" />
-
-    <Button
         android:id="@+id/buttonConnectar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -68,7 +56,7 @@
         android:text="Conectar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonCad" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextPassword" />
 
     <Button
         android:id="@+id/buttonDesc"
