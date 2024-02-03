@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "253427960102",
+    "firebase_url": "https://glicemiae01-default-rtdb.firebaseio.com",
+    "project_id": "glicemiae01",
+    "storage_bucket": "glicemiae01.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:253427960102:android:af5452253d98856a9159e7",
+        "android_client_info": {
+          "package_name": "com.example.contagemglicemia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "253427960102-ub7lla510cofod1pl60k5voi4p1feosi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrQ-GmxU8iqJ0uiEMZorzglpXpgUq034c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "253427960102-a4ba3tdphp4u8jr1a6eosghpmlgbtg4k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

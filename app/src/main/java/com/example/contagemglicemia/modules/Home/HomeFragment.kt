@@ -10,10 +10,10 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.contagemglicemia.dao.FirebaseDB
-import com.example.contagemglicemia.dao.MyDatabaseGSheets
 import com.example.contagemglicemia.dao.MyDatabaseManager
 import com.example.contagemglicemia.databinding.FragmentHomeBinding
 import com.example.contagemglicemia.model.Alimento
@@ -107,13 +107,15 @@ class HomeFragment : Fragment() {
                     binding.textViewResultadoInsulina.text = ""
 
                     try {
+                        binding.textViewResult.visibility = View.VISIBLE
+
                         campoResultado.text = null
                         campoResultado.text = viewModel.calcularGlicemia(
                             valorDigitado,
                             check1,
                             check2,
                             check3,
-                            requireContext()
+                            requireContext(),
                         )
 
                         lastValue = valorDigitado
@@ -125,6 +127,8 @@ class HomeFragment : Fragment() {
                     }
                 }
             } catch (E: Exception) {
+                Toast.makeText(requireContext(), "Insira um valor de glicemia", Toast.LENGTH_SHORT).show()
+                // Snakbar.make(view,"Insira um valor de glicemia" , Snackbar.LENGTH_SHORT).show()
             }
         }
     }

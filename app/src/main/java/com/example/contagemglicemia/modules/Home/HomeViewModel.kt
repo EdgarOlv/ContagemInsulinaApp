@@ -31,7 +31,7 @@ class HomeViewModel : ViewModel() {
         dbGsheets = MyDatabaseGSheets(context)
         dbGsheets?.connectDB(context)
 
-        if (dbManager.getConfigData().isNullOrEmpty()) {
+        if (dbManager.getConfigData().isEmpty()) {
             dbManager.startDataDatabase()
             dbManager.getConfigData().forEach {
                 when (it.id) {
@@ -70,62 +70,6 @@ class HomeViewModel : ViewModel() {
         return alimentSelected
     }
 
-    fun getAlimentation(context: Context): Alimento {
-        val currentTime = Calendar.getInstance().time
-        val calendar = Calendar.getInstance()
-        calendar.time = currentTime
-        // val arrayAliments: Array<Alimento> = arrayOfNulls<Alimento>()
-        val arrayAliments = arrayOfNulls<Alimento>(10)
-
-        var alimentoReturned = Alimento(0, "", "", 0)
-        dbManager = MyDatabaseManager(context)
-        var qtdUsada = 0
-        val hourOfDay = calendar.get(Calendar.HOUR_OF_DAY)
-
-        // TODO: Colocar com condições if, para poder utilizar variaves e usuario poder ajustar os horarios
-
-        dbManager.getAlimentoData().forEach {
-            when (it.id) {
-                1 -> arrayAliments[1] = it
-                2 -> arrayAliments[2] = it
-                3 -> arrayAliments[3] = it
-                4 -> arrayAliments[4] = it
-                5 -> arrayAliments[5] = it
-                6 -> arrayAliments[6] = it
-            }
-        }
-        when (hourOfDay) {
-            in 1..9 -> {
-                // café da manhã
-                alimentoReturned = arrayAliments[1] ?: alimentoReturned
-            }
-            in 9..11 -> {
-                // lanche manha
-                alimentoReturned = arrayAliments[2] ?: alimentoReturned
-            }
-            in 11..14 -> {
-                // almoço
-                alimentoReturned = arrayAliments[3] ?: alimentoReturned
-            }
-            in 14..17 -> {
-                // lanche da tarde
-                alimentoReturned = arrayAliments[4] ?: alimentoReturned
-            }
-            in 17..20 -> {
-                // jantar
-                alimentoReturned = arrayAliments[5] ?: alimentoReturned
-            }
-            in 20..24 -> {
-                // Ceia
-                alimentoReturned = arrayAliments[6] ?: alimentoReturned
-            }
-            else -> {
-                // horário de descanso
-            }
-        }
-        return alimentoReturned
-    }
-
     fun calcularGlicemia(
         valorDigitado: Int,
         check1: Boolean,
@@ -162,7 +106,7 @@ class HomeViewModel : ViewModel() {
                 val date = Date()
                 val dateString = dateFormat.format(date)
 
-                val newGlicemia = Glicemia(0, valorDigitado, dateString, resultadoInsulina.toInt())
+                val newGlicemia = Glicemia(0, valorDigitado, dateString, resultadoInsulina.toInt(), "")
 
                 dbManager.insertGlycemia(newGlicemia)
 

@@ -2,8 +2,10 @@ package com.example.contagemglicemia.modules.Config
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.contagemglicemia.dao.MyDatabaseManager
 import com.example.contagemglicemia.model.Alimento
+import com.example.contagemglicemia.modules.Home.HomeViewModel
 import java.util.*
 
 class ConfigViewModel : ViewModel() {
@@ -66,17 +68,13 @@ class ConfigViewModel : ViewModel() {
         return alimentoReturned
     }
 
-    /*class Factory(
-
-    ) : ViewModelProvider.Factory {
-
+    class Factory : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
+            if (modelClass.isAssignableFrom(ConfigViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
-                return HomeViewModel(
-                ) as T
+                return ConfigViewModel() as T
             }
-            throw IllegalArgumentException("Classe viewModel inválido")
+            throw IllegalArgumentException("Classe ViewModel inválida")
         }
-    }*/
+    }
 }

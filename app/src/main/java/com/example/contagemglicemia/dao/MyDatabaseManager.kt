@@ -123,7 +123,7 @@ class MyDatabaseManager(context: Context) {
                 val dateConverted = dateFormat.parse(data)
 
                 val insulin_aplicada = getInt(getColumnIndexOrThrow("insulina_aplicada"))
-                list.add(Glicemia(id, valor, data.toString(), insulin_aplicada))
+                list.add(Glicemia(id, valor, data.toString(), insulin_aplicada, ""))
             }
         }
 

@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:text="Insira a glicemia atual"
+            android:text="@string/insira_a_glicemia_atual"
             android:textSize="30sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -27,14 +27,17 @@
             android:layout_width="150sp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:hint="Ex.: 150"
+            android:hint="@string/ex_150"
             android:textSize= "20sp"
-            android:inputType="phone"
-
+            android:inputType="number"
+            android:digits="0123456789"
+            android:maxLines="1"
+            android:maxLength="3"
             android:textColor="@color/secondaryTextPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_view_id" />
+            app:layout_constraintTop_toBottomOf="@+id/text_view_id"
+            android:autofillHints="" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -157,7 +160,8 @@
             android:id="@+id/text_view_result"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Resultado: "
+            android:text="@string/resultado"
+            android:visibility="gone"
             android:textSize="30sp"
             android:textStyle="bold"
             android:layout_marginTop="10dp"

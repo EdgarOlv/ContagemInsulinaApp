@@ -4,7 +4,8 @@ data class Glicemia(
     var id: Int,
     var value: Int,
     var date: String,
-    var insulina_apply: Int
+    var insulina_apply: Int,
+    var observation: String
 )
 
 data class GlicemiaClean(
@@ -25,5 +26,6 @@ fun GlicemiaClean.toGlicemia() = Glicemia(
     id = 0,
     value = this.valor,
     date = this.data,
-    insulina_apply = this.insulina_aplicada
+    insulina_apply = this.insulina_aplicada,
+    observation = "",
 )

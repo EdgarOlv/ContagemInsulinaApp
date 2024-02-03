@@ -1,17 +1,22 @@
 package com.example.contagemglicemia.modules.Report.pages.page1
 
+import android.app.AlertDialog
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.contagemglicemia.dao.FirebaseDB
 import com.example.contagemglicemia.dao.MyDatabaseManager
+import com.example.contagemglicemia.databinding.DetailGlicemyBinding
 import com.example.contagemglicemia.databinding.FragmentReportOneBinding
+import com.example.contagemglicemia.model.Glicemia
 import com.example.contagemglicemia.modules.Report.pages.page1.adapter.RegistroGlicemiaAdapter
 
 class ReportOne : Fragment() {
@@ -51,6 +56,7 @@ class ReportOne : Fragment() {
 
         val adapter = RegistroGlicemiaAdapter(registros) { registro ->
             Log.i(TAG, "onViewCreated: Clicou no registro ${registro.id}")
+            showGlicemyDetailsDialog(registro)
         }
         recyclerView.adapter = adapter
 
@@ -64,6 +70,29 @@ class ReportOne : Fragment() {
             recyclerView.adapter = adapter
             swipeRefreshLayout.isRefreshing = false
         }
+    }
+
+    private fun showGlicemyDetailsDialog(glicemy: Glicemia) {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Detalhes da Glicemia")
+
+        val dialogView = DetailGlicemyBinding.inflate(LayoutInflater.from(requireContext()))
+        builder.setView(dialogView.root)
+
+        val valueGlicemy: TextView = dialogView.valueGlicemy
+        val valueDate: TextView = dialogView.valueDate
+        val valueObs: TextView = dialogView.valueObs
+
+        valueGlicemy.text = glicemy.value.toString()
+        valueDate.text = glicemy.date
+        valueObs.text = glicemy.observation
+
+        builder.setPositiveButton("Fechar", null)
+        builder.show()
+
+        val serialNumber: String = Build.SERIAL
+
+        Log.i(TAG, serialNumber)
     }
 
     companion object {

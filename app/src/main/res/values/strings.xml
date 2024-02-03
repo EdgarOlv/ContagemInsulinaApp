@@ -7,5 +7,11 @@
     <string name="alimentar">Alimentar</string>
     <string name="malhar">Malhar</string>
     <string name="permission_location_info">Clique aqui para saber mais</string>
+    <string name="salvar">Salvar</string>
+    <string name="configuracoes">Configurações</string>
+    <string name="food">Alimentação</string>
+    <string name="ex_150">Ex.: 150</string>
+    <string name="insira_a_glicemia_atual">Insira a glicemia atual</string>
+    <string name="resultado">Resultado:</string>
 
 </resources>
