@@ -2,15 +2,19 @@ package com.example.contagemglicemia.dao
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
+import android.util.Log
 import com.example.contagemglicemia.model.*
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 class MyDatabaseManager(context: Context) {
 
     private val dbHelper = MyDatabaseHelper(context)
+    val timeZoneBahia = TimeZone.getTimeZone("America/Bahia")
+    val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
+
 
     fun startDataDatabase() {
         val db = dbHelper.writableDatabase
@@ -72,11 +76,13 @@ class MyDatabaseManager(context: Context) {
 
     fun insertGlycemia(glicemia: Glicemia) {
 
+        dateFormat.timeZone = timeZoneBahia
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
             put("valor", glicemia.value)
-            put("data", glicemia.date)
+            put("data", dateFormat.format(glicemia.date))
             put("insulina_aplicada", glicemia.insulina_apply)
+            put("sync", glicemia.sync)
         }
         db.insert("glicemias", null, values)
         // db.close()
@@ -94,14 +100,17 @@ class MyDatabaseManager(context: Context) {
         db.close()
     }
 
-    fun updateData(id: Long, name: String, age: Int) {
+    fun updateGlycemia(glicemia: Glicemia) {
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
-            put("name", name)
-            put("age", age)
+            put("sync", 1)
         }
-        db.update("mytable", values, "_id=?", arrayOf(id.toString()))
-        db.close()
+
+        val whereClause = "id = ?"
+        val whereArgs = arrayOf(glicemia.id.toString())
+
+        db.update("glicemias", values, whereClause, whereArgs)
+        // db.close()
     }
 
     fun convertStringToDate(dateString: String): Date {
@@ -111,34 +120,78 @@ class MyDatabaseManager(context: Context) {
 
     fun getAllGlicemy(): List<Glicemia> {
         val db = dbHelper.readableDatabase
-        val cursor = db.rawQuery("SELECT id, valor, data, insulina_aplicada FROM glicemias ORDER BY data DESC", null)
+        val cursor = db.rawQuery("SELECT id, valor, data, insulina_aplicada, sync FROM glicemias ORDER BY data DESC", null)
         var list = mutableListOf<Glicemia>()
+
+        val timeZoneBahia = TimeZone.getTimeZone("America/Bahia")
         val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
+        dateFormat.timeZone = timeZoneBahia
 
         with(cursor) {
             while (moveToNext()) {
                 val id = getInt(getColumnIndexOrThrow("id"))
                 val valor = getInt(getColumnIndexOrThrow("valor"))
                 val data = getString(getColumnIndexOrThrow("data"))
+                val sync = getInt(getColumnIndexOrThrow("sync"))
                 val dateConverted = dateFormat.parse(data)
 
                 val insulin_aplicada = getInt(getColumnIndexOrThrow("insulina_aplicada"))
-                list.add(Glicemia(id, valor, data.toString(), insulin_aplicada, ""))
+                list.add(Glicemia(id, valor, dateConverted, insulin_aplicada, "", sync))
             }
         }
 
         return list
     }
 
-    fun getAllGlicemyDates(): List<String> {
+    fun getAllGlicemyUnsync(): List<Glicemia> {
+        val db = dbHelper.readableDatabase
+        val cursor = db.rawQuery("SELECT id, valor, data, insulina_aplicada, sync FROM glicemias WHERE sync = 0  ORDER BY data DESC", null)
+        var list = mutableListOf<Glicemia>()
+
+        dateFormat.timeZone = timeZoneBahia
+        with(cursor) {
+            while (moveToNext()) {
+                val id = getInt(getColumnIndexOrThrow("id"))
+                val valor = getInt(getColumnIndexOrThrow("valor"))
+                val data = getString(getColumnIndexOrThrow("data"))
+                val sync = getInt(getColumnIndexOrThrow("sync"))
+
+                val dateConverted = dateFormat.parse(data)
+
+                val insulin_aplicada = getInt(getColumnIndexOrThrow("insulina_aplicada"))
+                list.add(Glicemia(id, valor, dateConverted, insulin_aplicada, "", sync))
+            }
+        }
+
+        return list
+    }
+
+    fun getCountGlicemyUnsync(): Int {
+        val db = dbHelper.readableDatabase
+        val cursor = db.rawQuery("SELECT COUNT(*) FROM glicemias WHERE sync = 0", null)
+        var count = 0
+
+        with(cursor) {
+            if (moveToFirst()) {
+                count = getInt(0)
+            }
+        }
+
+        return count
+    }
+
+    fun getAllGlicemyDates(): List<Date> {
         val db = dbHelper.readableDatabase
         val cursor = db.rawQuery("SELECT data FROM glicemias", null)
-        val datesList = mutableListOf<String>()
+        val datesList = mutableListOf<Date>()
 
+        dateFormat.timeZone = timeZoneBahia
         with(cursor) {
             while (moveToNext()) {
                 val data = getString(getColumnIndexOrThrow("data"))
-                datesList.add(data)
+
+                val dateConverted = dateFormat.parse(data)
+                datesList.add(dateConverted)
             }
         }
 
@@ -186,7 +239,7 @@ class MyDatabaseManager(context: Context) {
             "Almoco" to carboAlimento.almoco,
             "LancheT" to carboAlimento.lancheT,
             "Jantar" to carboAlimento.jantar,
-            "Ceia" to carboAlimento.ceia
+            "Ceia" to carboAlimento.ceia,
         )
 
         for ((refeicao, quantidade) in refeicoes) {
@@ -203,7 +256,7 @@ class MyDatabaseManager(context: Context) {
         val configs = mapOf(
             "1" to configModel.glicemiaAlvo,
             "2" to configModel.fatorSensibilidade,
-            "3" to configModel.relacaoCarbo
+            "3" to configModel.relacaoCarbo,
         )
 
         for ((config, quantidade) in configs) {
@@ -213,5 +266,22 @@ class MyDatabaseManager(context: Context) {
             db.update("config", values, "id=?", arrayOf(config))
         }
         db.close()
+    }
+
+    fun verifyAndUpdateUnsync(requireContext: Context, firebaseDb: FirebaseDB) {
+        val listUnsync = getAllGlicemyUnsync()
+        for (item in listUnsync) {
+            try {
+                firebaseDb.InserirEmNuvem(requireContext, item)
+                updateGlycemia(item)
+            } catch (e: Exception) {
+                Log.i("TAG", "verifyAndUpdateUnsync: Errooooo")
+            }
+        }
+    }
+
+    fun countUnsyncedGlicemy(requireContext: Context, firebaseDb: FirebaseDB): Int {
+        val countUnsynced = getCountGlicemyUnsync()
+        return countUnsynced
     }
 }

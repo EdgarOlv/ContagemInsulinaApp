@@ -1,15 +1,26 @@
 package com.example.contagemglicemia
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.text.Html
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.viewpager2.widget.ViewPager2
 import com.example.contagemglicemia.dao.FirebaseDB
+import com.example.contagemglicemia.dao.MyDatabaseManager
 import com.example.contagemglicemia.databinding.ActivityMainBinding
 import com.example.contagemglicemia.modules.Config.ConfigFragment
 import com.example.contagemglicemia.modules.Firebase.FirebaseModule
 import com.example.contagemglicemia.modules.Home.HomeFragment
 import com.example.contagemglicemia.modules.Report.ReportFragment
+import com.example.contagemglicemia.utils.Event
+import com.example.contagemglicemia.utils.EventObserver
 import com.google.firebase.FirebaseApp
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
@@ -21,6 +32,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var firebaseAnalytics: FirebaseAnalytics
     private lateinit var auth: FirebaseAuth
     private lateinit var firebaseDb: FirebaseDB
+    private lateinit var dbManager: MyDatabaseManager
+
+    private val _countValue = MutableLiveData<Event<Int>>()
+    val countValue: LiveData<Event<Int>> = _countValue
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,8 +68,20 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        auth = FirebaseAuth.getInstance()
+        dbManager = MyDatabaseManager(this)
+
         setupListeners()
         setupFirebase()
+        verifyUnsyncGlicemy()
+    }
+
+    private fun verifyUnsyncGlicemy() {
+        val qtd = dbManager.countUnsyncedGlicemy(this, firebaseDb)
+        if (qtd > 0) {
+            binding.drawerAppbar.counterGlicemy.visibility = View.VISIBLE
+            binding.drawerAppbar.countItens.text = qtd.toString()
+        }
     }
 
     private fun setupListeners() {
@@ -73,6 +100,38 @@ class MainActivity : AppCompatActivity() {
 
             true
         }
+
+        binding.drawerAppbar.home.setOnClickListener {
+            viewPager.setCurrentItem(0, true)
+        }
+
+        binding.drawerAppbar.sync.setOnClickListener {
+            if (isInternetAvailable(this) && auth.currentUser != null) {
+                dbManager.verifyAndUpdateUnsync(this, firebaseDb)
+                setCountGlicemy(0)
+                Toast.makeText(this, "Enviado com sucesso!", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Sem internet, ou faça login", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        countValue.observe(
+            this,
+            EventObserver { countGlicemy ->
+                if (countGlicemy > 0) {
+                    binding.drawerAppbar.counterGlicemy.visibility = View.VISIBLE
+                    binding.drawerAppbar.sync.visibility = View.VISIBLE
+                    binding.drawerAppbar.countItens.text = countGlicemy.toString()
+                }else{
+
+                    binding.drawerAppbar.sync.visibility = View.GONE
+                }
+            },
+        )
+    }
+
+    fun setCountGlicemy(value: Int) {
+        _countValue.postValue(Event(value))
     }
 
     private fun setupFirebase() {
@@ -84,7 +143,29 @@ class MainActivity : AppCompatActivity() {
 
         firebaseDb = FirebaseDB()
 
-        firebaseDb.ReceberListNuvem(this)
+        //firebaseDb.ReceberListNuvem(this)
     }
 
+    companion object {
+        fun isInternetAvailable(context: Context): Boolean {
+            val connectivityManager =
+                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                val networkCapabilities = connectivityManager.activeNetwork ?: return false
+                val activeNetwork =
+                    connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
+
+                return when {
+                    activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                    activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                    // Other transports, like Bluetooth or Ethernet, may be added as needed
+                    else -> false
+                }
+            } else {
+                val activeNetworkInfo = connectivityManager.activeNetworkInfo
+                return activeNetworkInfo != null && activeNetworkInfo.isConnected
+            }
+        }
+    }
 }

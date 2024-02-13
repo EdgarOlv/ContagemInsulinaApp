@@ -7,6 +7,7 @@ object TableGlicemia {
     const val DATE = "data"
     const val INSULIN_APPLY = "insulina_aplicada"
     const val OBS = "obs"
+    const val SYNC = "sync"
 }
 
 object TableConfig {

@@ -1,13 +1,20 @@
 package com.example.contagemglicemia.modules.Home
 
+import android.app.usage.UsageEvents
 import android.content.Context
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.contagemglicemia.MainActivity
 import com.example.contagemglicemia.dao.FirebaseDB
 import com.example.contagemglicemia.dao.MyDatabaseGSheets
 import com.example.contagemglicemia.dao.MyDatabaseManager
 import com.example.contagemglicemia.model.Alimento
 import com.example.contagemglicemia.model.Glicemia
+import com.example.contagemglicemia.utils.Event
+import com.google.firebase.auth.FirebaseAuth
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -24,6 +31,7 @@ class HomeViewModel : ViewModel() {
     var resultadoTexto = ""
     var listOfAliments: List<Alimento> = mutableListOf()
     var alimentSelected = Alimento(0, "", "", 0)
+
 
     fun iniciaDadosBanco(context: Context) {
         dbManager = MyDatabaseManager(context)
@@ -70,6 +78,18 @@ class HomeViewModel : ViewModel() {
         return alimentSelected
     }
 
+    fun updateGlicemyUnsync(requireContext: Context, auth: FirebaseAuth) {
+
+        var teste =  auth.currentUser
+        var i = 1
+
+        if (MainActivity.isInternetAvailable(requireContext) && auth.currentUser != null) {
+            dbManager.verifyAndUpdateUnsync(requireContext, firebaseDb)
+        } else {
+            Log.i("TAG", "updateGlicemyUnsync: SEM INTERNETTTTTTTTT")
+        }
+    }
+
     fun calcularGlicemia(
         valorDigitado: Int,
         check1: Boolean,
@@ -102,11 +122,14 @@ class HomeViewModel : ViewModel() {
                     resultadoTexto += String.format("Aplicar %.2f UI", resultadoInsulina)
                 }
 
+                val timeZoneBahia = TimeZone.getTimeZone("America/Bahia")
                 val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
+                dateFormat.timeZone = timeZoneBahia
+
                 val date = Date()
                 val dateString = dateFormat.format(date)
 
-                val newGlicemia = Glicemia(0, valorDigitado, dateString, resultadoInsulina.toInt(), "")
+                val newGlicemia = Glicemia(0, valorDigitado, date, resultadoInsulina.toInt(), "", 0)
 
                 dbManager.insertGlycemia(newGlicemia)
 

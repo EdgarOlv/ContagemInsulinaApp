@@ -13,11 +13,16 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.contagemglicemia.MainActivity
 import com.example.contagemglicemia.dao.FirebaseDB
 import com.example.contagemglicemia.dao.MyDatabaseManager
 import com.example.contagemglicemia.databinding.FragmentHomeBinding
 import com.example.contagemglicemia.model.Alimento
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
@@ -26,6 +31,7 @@ class HomeFragment : Fragment() {
     private lateinit var viewModel: HomeViewModel
     private lateinit var db: FirebaseFirestore
     private lateinit var firebaseDb: FirebaseDB
+    private lateinit var auth: FirebaseAuth
 
     var alimentSelected = Alimento(0, "", "", 0)
     var lastValue = 0
@@ -39,9 +45,10 @@ class HomeFragment : Fragment() {
         db = FirebaseFirestore.getInstance()
 
         setupViewModel()
+
         viewModel.iniciaDadosBanco(requireContext())
 
-        firebaseDb.ReceberListNuvem(requireContext())
+        auth = FirebaseAuth.getInstance()
     }
 
     override fun onCreateView(
@@ -59,11 +66,6 @@ class HomeFragment : Fragment() {
         binding.checkboxCorrigir.isChecked = true
         binding.checkboxAlimentar.isChecked = true
 
-        alimentSelected = viewModel.getActualAlimentation()
-        binding.textViewTipoRefeicao.setText(alimentSelected.name)
-
-        bindingCalcular(view)
-
         binding.checkboxAlimentar.setOnClickListener {
             if (binding.checkboxAlimentar.isChecked) {
                 selectAlimentation()
@@ -71,6 +73,27 @@ class HomeFragment : Fragment() {
         }
 
         campoResultado = binding.textViewResultadoInsulina
+
+        CoroutineScope(Dispatchers.IO).launch {
+            firebaseDb.ReceberListNuvem(requireContext())
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.updateGlicemyUnsync(requireContext(), auth)
+
+        alimentSelected = viewModel.getActualAlimentation()
+        binding.textViewTipoRefeicao.setText(alimentSelected.name)
+
+        val qtd = dbManager.countUnsyncedGlicemy(requireContext(), firebaseDb)
+        if (qtd > 0) {
+            if (activity != null) {
+                (activity as MainActivity).setCountGlicemy(qtd)
+            }
+        }
+
+        view?.let { bindingCalcular(it) }
     }
 
     private fun setupViewModel() {
@@ -122,12 +145,19 @@ class HomeFragment : Fragment() {
                         val imm =
                             requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                         imm.hideSoftInputFromWindow(view.windowToken, 0)
+
+                        Toast.makeText(
+                            requireContext(),
+                            "Inserido com sucesso!!",
+                            Toast.LENGTH_SHORT,
+                        ).show()
                     } catch (e: Exception) {
                         campoResultado.setText("Erro")
                     }
                 }
             } catch (E: Exception) {
-                Toast.makeText(requireContext(), "Insira um valor de glicemia", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Insira um valor de glicemia", Toast.LENGTH_SHORT)
+                    .show()
                 // Snakbar.make(view,"Insira um valor de glicemia" , Snackbar.LENGTH_SHORT).show()
             }
         }

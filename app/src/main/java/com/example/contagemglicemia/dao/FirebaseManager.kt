@@ -11,4 +11,5 @@ class FirebaseManager(private val firebaseAnalytics: FirebaseAnalytics) {
         //FirebaseCrashlytics.getInstance().recordException(throwable)
         //FirebaseCrashlytics.getInstance().log(message)
     }
+
 }

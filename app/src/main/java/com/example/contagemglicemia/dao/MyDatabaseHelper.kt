@@ -8,8 +8,7 @@ class MyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
 
     companion object {
         private const val DATABASE_NAME = "mydatabase.db"
-        private const val DATABASE_VERSION = 4
-
+        private const val DATABASE_VERSION = 6
 
     }
 
@@ -21,8 +20,9 @@ class MyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
         val CREATE_TABLE_GLYCEMIA = "CREATE TABLE if not exists ${TableGlicemia.TABLE_NAME} (" +
                 "${TableGlicemia.ID} INTEGER PRIMARY KEY," +
                 "${TableGlicemia.VALUE} INTEGER," +
-                "${TableGlicemia.DATE} TEXT," +
+                "${TableGlicemia.DATE} DATE," +
                 "${TableGlicemia.INSULIN_APPLY} INTEGER," +
+                "${TableGlicemia.SYNC} INTEGER," +
                 "${TableGlicemia.OBS} TEXT)"
 
         db.execSQL(CREATE_TABLE_GLYCEMIA)

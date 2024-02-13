@@ -7,6 +7,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.contagemglicemia.model.Glicemia
 import com.example.contagemglicemia.R
+import java.text.SimpleDateFormat
+import java.util.TimeZone
 
 class RegistroGlicemiaAdapter(val registros: List<Glicemia>, val onItemClick: (Glicemia) -> Unit) : RecyclerView.Adapter<RegistroGlicemiaAdapter.RegistroGlicemiaViewHolder>() {
 
@@ -25,12 +27,21 @@ class RegistroGlicemiaAdapter(val registros: List<Glicemia>, val onItemClick: (G
     override fun onBindViewHolder(holder: RegistroGlicemiaViewHolder, position: Int) {
         val registro = registros[position]
 
+        val timeZoneBahia = TimeZone.getTimeZone("America/Bahia")
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
+        dateFormat.timeZone = timeZoneBahia
+
         holder.textViewValor.text = registro.value.toString()
         holder.textViewInsulina.text = registro.insulina_apply.toString()
-        holder.textViewData.text = registro.date.toString()
+        holder.textViewData.text = dateFormat.format(registro.date)
         holder.textViewId.text = registro.id.toString()
 
-        holder.itemView.setOnClickListener { onItemClick(registro) }
+        holder.itemView.setOnClickListener {
+
+
+            onItemClick(registro)
+
+        }
     }
 
     override fun getItemCount() = registros.size
