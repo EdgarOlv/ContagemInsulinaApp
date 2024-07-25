@@ -78,9 +78,19 @@
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:layout_constraintBottom_toBottomOf="@id/text_view_data"
+                app:layout_constraintEnd_toStartOf="@id/iconStatus"
                 app:layout_constraintStart_toEndOf="@id/view2"
                 app:layout_constraintTop_toTopOf="@id/text_view_data"
                 tools:text="10 UI" />
+
+            <ImageView
+                android:id="@+id/iconStatus"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_check"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/text_view_insulina"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

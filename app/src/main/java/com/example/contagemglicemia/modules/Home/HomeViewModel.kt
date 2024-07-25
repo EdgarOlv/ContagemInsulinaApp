@@ -1,10 +1,8 @@
 package com.example.contagemglicemia.modules.Home
 
-import android.app.usage.UsageEvents
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.contagemglicemia.MainActivity
@@ -13,7 +11,6 @@ import com.example.contagemglicemia.dao.MyDatabaseGSheets
 import com.example.contagemglicemia.dao.MyDatabaseManager
 import com.example.contagemglicemia.model.Alimento
 import com.example.contagemglicemia.model.Glicemia
-import com.example.contagemglicemia.utils.Event
 import com.google.firebase.auth.FirebaseAuth
 import java.text.SimpleDateFormat
 import java.util.*
@@ -96,6 +93,8 @@ class HomeViewModel : ViewModel() {
         check2: Boolean,
         check3: Boolean,
         context: Context,
+        auth: FirebaseAuth,
+        activity: FragmentActivity?,
     ): String {
         try {
             if (valorDigitado != 0) {
@@ -108,8 +107,6 @@ class HomeViewModel : ViewModel() {
                 }
                 if (check2) {
                     val result = (alimentSelected.qtd_carboidrato.toDouble() / relacaoCarboidrato)
-                    var test1 = alimentSelected.qtd_carboidrato.toDouble()
-                    var test2 = relacaoCarboidrato
                     resultadoInsulina += result
                     resultadoTexto += String.format("Alimento = %.2f UI\n", result)
                 }
@@ -123,17 +120,27 @@ class HomeViewModel : ViewModel() {
                 }
 
                 val timeZoneBahia = TimeZone.getTimeZone("America/Bahia")
-                val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                 dateFormat.timeZone = timeZoneBahia
 
                 val date = Date()
                 val dateString = dateFormat.format(date)
 
-                val newGlicemia = Glicemia(0, valorDigitado, date, resultadoInsulina.toInt(), "", 0)
+                val newGlicemia = Glicemia(0, valorDigitado, dateString, resultadoInsulina.toInt(), "", 0)
 
                 dbManager.insertGlycemia(newGlicemia)
 
-                firebaseDb.InserirEmNuvem(context, newGlicemia)
+                if (MainActivity.isInternetAvailable(context) && auth.currentUser != null) {
+                    firebaseDb.InserirEmNuvem(context, newGlicemia)
+                } else {
+                    val qtd = dbManager.countUnsyncedGlicemy(context, firebaseDb)
+                    if (qtd > 0) {
+                        if (activity != null) {
+                            (activity as MainActivity).setCountGlicemy(qtd)
+                        }
+                    }
+                }
+
 
                 return resultadoTexto
             }

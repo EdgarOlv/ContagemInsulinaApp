@@ -33,7 +33,6 @@ class HomeFragment : Fragment() {
     private lateinit var firebaseDb: FirebaseDB
     private lateinit var auth: FirebaseAuth
 
-    var alimentSelected = Alimento(0, "", "", 0)
     var lastValue = 0
     private lateinit var campoResultado: TextView
 
@@ -69,6 +68,7 @@ class HomeFragment : Fragment() {
         binding.checkboxAlimentar.setOnClickListener {
             if (binding.checkboxAlimentar.isChecked) {
                 selectAlimentation()
+                lastValue = 0
             }
         }
 
@@ -83,8 +83,8 @@ class HomeFragment : Fragment() {
         super.onResume()
         viewModel.updateGlicemyUnsync(requireContext(), auth)
 
-        alimentSelected = viewModel.getActualAlimentation()
-        binding.textViewTipoRefeicao.setText(alimentSelected.name)
+        viewModel.alimentSelected = viewModel.getActualAlimentation()
+        binding.textViewTipoRefeicao.setText(viewModel.alimentSelected.name)
 
         val qtd = dbManager.countUnsyncedGlicemy(requireContext(), firebaseDb)
         if (qtd > 0) {
@@ -109,8 +109,8 @@ class HomeFragment : Fragment() {
         builder.setAdapter(
             ArrayAdapter(requireContext(), R.layout.simple_list_item_1, opcoes.map { it.name }),
         ) { dialog, which ->
-            alimentSelected = opcoes[which]
-            binding.textViewTipoRefeicao.setText(alimentSelected.name)
+            viewModel.alimentSelected = opcoes[which]
+            binding.textViewTipoRefeicao.setText(viewModel.alimentSelected.name)
         }
         builder.show()
     }
@@ -132,14 +132,18 @@ class HomeFragment : Fragment() {
                     try {
                         binding.textViewResult.visibility = View.VISIBLE
 
-                        campoResultado.text = null
-                        campoResultado.text = viewModel.calcularGlicemia(
+                        var resultInsulin = viewModel.calcularGlicemia(
                             valorDigitado,
                             check1,
                             check2,
                             check3,
                             requireContext(),
+                            auth,
+                            activity
                         )
+
+                        campoResultado.text = null
+                        campoResultado.text = resultInsulin
 
                         lastValue = valorDigitado
                         val imm =

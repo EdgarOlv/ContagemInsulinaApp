@@ -8,7 +8,7 @@ import java.util.TimeZone
 data class Glicemia(
     var id: Int,
     var value: Int,
-    var date: Date,
+    var date: String,
     var insulina_apply: Int,
     var observation: String,
     var sync: Int,
@@ -33,11 +33,11 @@ fun Glicemia.toGlicemiaCloud() = GlicemiaClean(
 fun GlicemiaClean.toGlicemia() = Glicemia(
     id = 0,
     value = this.valor,
-    date = dateFormat.parse(this.data)!!,
+    date = this.data,
     insulina_apply = this.insulina_aplicada,
     observation = "",
     sync = sync,
 )
 
 val timeZoneBahia = TimeZone.getTimeZone("America/Bahia")
-val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
+val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")

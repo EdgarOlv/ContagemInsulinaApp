@@ -16,6 +16,9 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.TimeZone
 
 class FirebaseDB {
 
@@ -26,11 +29,21 @@ class FirebaseDB {
         glicemia: Glicemia,
     ) {
         try {
+            val timeZoneBahia = TimeZone.getTimeZone("America/Bahia")
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+            dateFormat.timeZone = timeZoneBahia
+
+            val date = Date()
+            val dateString = dateFormat.format(date)
+
             val glicemiaCloud = glicemia.toGlicemiaCloud()
             val database = Firebase.database
             val instanceCloud = database.getReference("glicemia")
 
-            instanceCloud.child(glicemiaCloud.data.toString()).setValue(glicemiaCloud)
+            val data = glicemiaCloud.data
+            val dateConverted = dateFormat.parse(data)
+
+            instanceCloud.child(dateString.toString()).setValue(glicemiaCloud)
         } catch (e: Exception) {
             Toast.makeText(context, "Erro ao inserir na nuvem", Toast.LENGTH_SHORT).show()
         }
@@ -75,7 +88,7 @@ class FirebaseDB {
                             val data = glicemia.data
                             val dateConverted = dateFormat.parse(data)
 
-                            if (!existingDates.contains(dateConverted)) {
+                            if (!existingDates.contains(data)) {
                                 CoroutineScope(Dispatchers.IO).launch {
                                     dbManager.insertGlycemia(glicemia.toGlicemia())
                                 }

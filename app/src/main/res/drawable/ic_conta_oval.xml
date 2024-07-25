@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   SipuB - Sistema de Informação Pública
+
+  @link https://github.com/facilitatech/sip-android for the canonical source repository
+
+  @copyright Copyright (c) Facilita.tech. (https://facilita.tech)
+
+  -->
+
+<layer-list xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#E8EAED"/>
+            <size
+                android:width="36dp"
+                android:height="36dp"/>
+        </shape>
+    </item>
+    <item
+        android:width="24dp"
+        android:height="24dp"
+        android:gravity="center"
+        android:drawable="@drawable/ic_city"
+        tools:ignore="UnusedAttribute" />
+</layer-list>

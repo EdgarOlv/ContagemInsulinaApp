@@ -80,7 +80,7 @@ class MyDatabaseManager(context: Context) {
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
             put("valor", glicemia.value)
-            put("data", dateFormat.format(glicemia.date))
+            put("data", glicemia.date)
             put("insulina_aplicada", glicemia.insulina_apply)
             put("sync", glicemia.sync)
         }
@@ -136,7 +136,7 @@ class MyDatabaseManager(context: Context) {
                 val dateConverted = dateFormat.parse(data)
 
                 val insulin_aplicada = getInt(getColumnIndexOrThrow("insulina_aplicada"))
-                list.add(Glicemia(id, valor, dateConverted, insulin_aplicada, "", sync))
+                list.add(Glicemia(id, valor, data, insulin_aplicada, "", sync))
             }
         }
 
@@ -159,7 +159,7 @@ class MyDatabaseManager(context: Context) {
                 val dateConverted = dateFormat.parse(data)
 
                 val insulin_aplicada = getInt(getColumnIndexOrThrow("insulina_aplicada"))
-                list.add(Glicemia(id, valor, dateConverted, insulin_aplicada, "", sync))
+                list.add(Glicemia(id, valor, data, insulin_aplicada, "", sync))
             }
         }
 
@@ -180,10 +180,10 @@ class MyDatabaseManager(context: Context) {
         return count
     }
 
-    fun getAllGlicemyDates(): List<Date> {
+    fun getAllGlicemyDates(): List<String> {
         val db = dbHelper.readableDatabase
         val cursor = db.rawQuery("SELECT data FROM glicemias", null)
-        val datesList = mutableListOf<Date>()
+        val datesList = mutableListOf<String>()
 
         dateFormat.timeZone = timeZoneBahia
         with(cursor) {
@@ -191,7 +191,7 @@ class MyDatabaseManager(context: Context) {
                 val data = getString(getColumnIndexOrThrow("data"))
 
                 val dateConverted = dateFormat.parse(data)
-                datesList.add(dateConverted)
+                datesList.add(data)
             }
         }
 

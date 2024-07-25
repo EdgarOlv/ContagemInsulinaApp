@@ -1,0 +1,29 @@
+<!--
+   SipuB - Sistema de Informação Pública
+
+  @link https://github.com/facilitatech/sip-android for the canonical source repository
+
+  @copyright Copyright (c) Facilita.tech. (https://facilita.tech)
+
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportHeight="48.0"
+    android:viewportWidth="48.0">
+    <path
+        android:fillColor="@color/red_700"
+        android:pathData="M2,24c0,-12.15 9.85,-22 22,-22c12.15,0 22,9.85 22,22c0,12.15 -9.85,22 -22,22c-12.15,0 -22,-9.85 -22,-22z"
+        android:strokeColor="#00000000"
+        android:strokeLineCap="butt"
+        android:strokeLineJoin="miter"
+        android:strokeWidth="1" />
+    <path
+        android:fillColor="@color/red_700"
+        android:pathData="M24.36,24c0,0.2 -0.16,0.36 -0.36,0.36c-0.2,0 -0.36,-0.16 -0.36,-0.36c0,-0.2 0.16,-0.36 0.36,-0.36c0.2,0 0.36,0.16 0.36,0.36zM25,23.91v0.18h-0.19c-0.04,0.38 -0.34,0.68 -0.72,0.72v0.19h-0.18v-0.19c-0.38,-0.04 -0.68,-0.34 -0.72,-0.72h-0.19v-0.18h0.19c0.04,-0.38 0.34,-0.68 0.72,-0.72v-0.19h0.18v0.19c0.38,0.04 0.68,0.34 0.72,0.72zM24.64,24c0,-0.35 -0.28,-0.64 -0.64,-0.64c-0.35,0 -0.64,0.28 -0.64,0.64c0,0.35 0.28,0.64 0.64,0.64c0.35,0 0.64,-0.28 0.64,-0.64z"
+        android:strokeColor="#00000000"
+        android:strokeLineCap="butt"
+        android:strokeLineJoin="miter"
+        android:strokeWidth="0" />
+</vector>

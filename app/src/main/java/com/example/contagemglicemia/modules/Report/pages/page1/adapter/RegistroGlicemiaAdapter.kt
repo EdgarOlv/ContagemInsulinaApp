@@ -33,7 +33,7 @@ class RegistroGlicemiaAdapter(val registros: List<Glicemia>, val onItemClick: (G
 
         holder.textViewValor.text = registro.value.toString()
         holder.textViewInsulina.text = registro.insulina_apply.toString()
-        holder.textViewData.text = dateFormat.format(registro.date)
+        holder.textViewData.text = registro.date
         holder.textViewId.text = registro.id.toString()
 
         holder.itemView.setOnClickListener {
