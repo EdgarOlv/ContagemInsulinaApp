@@ -81,8 +81,9 @@ class MyDatabaseManager(context: Context) {
         val values = ContentValues().apply {
             put("valor", glicemia.value)
             put("data", glicemia.date)
-            put("insulina_aplicada", glicemia.insulina_apply)
+            put("insulina_aplicada", glicemia.insulinaApply)
             put("sync", glicemia.sync)
+            put("loc", glicemia.loc)
         }
         db.insert("glicemias", null, values)
         // db.close()
@@ -120,7 +121,7 @@ class MyDatabaseManager(context: Context) {
 
     fun getAllGlicemy(): List<Glicemia> {
         val db = dbHelper.readableDatabase
-        val cursor = db.rawQuery("SELECT id, valor, data, insulina_aplicada, sync FROM glicemias ORDER BY data DESC", null)
+        val cursor = db.rawQuery("SELECT id, valor, data, insulina_aplicada, sync, loc FROM glicemias ORDER BY data DESC", null)
         var list = mutableListOf<Glicemia>()
 
         val timeZoneBahia = TimeZone.getTimeZone("America/Bahia")
@@ -133,10 +134,10 @@ class MyDatabaseManager(context: Context) {
                 val valor = getInt(getColumnIndexOrThrow("valor"))
                 val data = getString(getColumnIndexOrThrow("data"))
                 val sync = getInt(getColumnIndexOrThrow("sync"))
-                val dateConverted = dateFormat.parse(data)
+                val loc = getString(getColumnIndexOrThrow("loc"))
 
                 val insulin_aplicada = getInt(getColumnIndexOrThrow("insulina_aplicada"))
-                list.add(Glicemia(id, valor, data, insulin_aplicada, "", sync))
+                list.add(Glicemia(id, valor, data, insulin_aplicada, "", sync, loc?: ""))
             }
         }
 
@@ -145,7 +146,7 @@ class MyDatabaseManager(context: Context) {
 
     fun getAllGlicemyUnsync(): List<Glicemia> {
         val db = dbHelper.readableDatabase
-        val cursor = db.rawQuery("SELECT id, valor, data, insulina_aplicada, sync FROM glicemias WHERE sync = 0  ORDER BY data DESC", null)
+        val cursor = db.rawQuery("SELECT id, valor, data, insulina_aplicada, sync, loc FROM glicemias WHERE sync = 0  ORDER BY data DESC", null)
         var list = mutableListOf<Glicemia>()
 
         dateFormat.timeZone = timeZoneBahia
@@ -155,11 +156,10 @@ class MyDatabaseManager(context: Context) {
                 val valor = getInt(getColumnIndexOrThrow("valor"))
                 val data = getString(getColumnIndexOrThrow("data"))
                 val sync = getInt(getColumnIndexOrThrow("sync"))
-
-                val dateConverted = dateFormat.parse(data)
+                val loc = getString(getColumnIndexOrThrow("loc"))
 
                 val insulin_aplicada = getInt(getColumnIndexOrThrow("insulina_aplicada"))
-                list.add(Glicemia(id, valor, data, insulin_aplicada, "", sync))
+                list.add(Glicemia(id, valor, data, insulin_aplicada, "", sync, loc))
             }
         }
 
@@ -190,7 +190,6 @@ class MyDatabaseManager(context: Context) {
             while (moveToNext()) {
                 val data = getString(getColumnIndexOrThrow("data"))
 
-                val dateConverted = dateFormat.parse(data)
                 datesList.add(data)
             }
         }

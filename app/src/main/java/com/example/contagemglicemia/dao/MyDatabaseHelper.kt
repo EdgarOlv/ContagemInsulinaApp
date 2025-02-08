@@ -23,6 +23,7 @@ class MyDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NA
                 "${TableGlicemia.DATE} DATE," +
                 "${TableGlicemia.INSULIN_APPLY} INTEGER," +
                 "${TableGlicemia.SYNC} INTEGER," +
+                "${TableGlicemia.LOC} TEXT," +
                 "${TableGlicemia.OBS} TEXT)"
 
         db.execSQL(CREATE_TABLE_GLYCEMIA)

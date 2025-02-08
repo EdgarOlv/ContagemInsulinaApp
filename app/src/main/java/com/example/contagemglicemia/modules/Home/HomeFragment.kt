@@ -3,7 +3,10 @@ package com.example.contagemglicemia.modules.Home
 import android.R
 import android.app.AlertDialog
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -117,9 +120,11 @@ class HomeFragment : Fragment() {
 
     private fun bindingCalcular(view: View) {
         binding.buttonCalcular.setOnClickListener() {
+
             val check1 = binding.checkboxCorrigir.isChecked
             val check2 = binding.checkboxAlimentar.isChecked
             val check3 = binding.checkboxMalhar.isChecked
+            val checkTesteLocal = binding.checkboxTesteLocal.isChecked
 
             try {
                 val valorDigitado = binding.editText.text.toString().toInt()
@@ -137,6 +142,7 @@ class HomeFragment : Fragment() {
                             check1,
                             check2,
                             check3,
+                            checkTesteLocal,
                             requireContext(),
                             auth,
                             activity
@@ -165,6 +171,14 @@ class HomeFragment : Fragment() {
                 // Snakbar.make(view,"Insira um valor de glicemia" , Snackbar.LENGTH_SHORT).show()
             }
         }
+    }
+
+    fun getDeviceIdentifier(context: Context): String {
+        val deviceModel = Build.MODEL
+        val manufacturer = Build.MANUFACTURER
+        val androidId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+
+        return "Device: $manufacturer $deviceModel, ID: $androidId"
     }
 
     companion object {

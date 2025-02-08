@@ -1,7 +1,6 @@
 package com.example.contagemglicemia.modules.Report.pages.page1
 
 import android.app.AlertDialog
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,6 +17,7 @@ import com.example.contagemglicemia.dao.MyDatabaseManager
 import com.example.contagemglicemia.databinding.DetailGlicemyBinding
 import com.example.contagemglicemia.databinding.FragmentReportOneBinding
 import com.example.contagemglicemia.model.Glicemia
+import com.example.contagemglicemia.modules.Report.ReportViewModel
 import com.example.contagemglicemia.modules.Report.pages.page1.adapter.RegistroGlicemiaAdapter
 import com.example.contagemglicemia.utils.EventObserver
 
@@ -26,7 +26,7 @@ class ReportOne : Fragment() {
     private lateinit var binding: FragmentReportOneBinding
     private lateinit var recyclerView: RecyclerView
     private lateinit var dbManager: MyDatabaseManager
-    private lateinit var viewModel: ReportOneViewModel
+    private lateinit var viewModel: ReportViewModel
     val TAG = "ReportOne"
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var firebaseDb: FirebaseDB
@@ -88,9 +88,9 @@ class ReportOne : Fragment() {
     }
 
     private fun setupViewModel() {
-        val viewModelFactory = ReportOneViewModel.Factory()
+        val viewModelFactory = ReportViewModel.Factory()
         viewModel = ViewModelProvider(this, viewModelFactory)
-            .get(ReportOneViewModel::class.java)
+            .get(ReportViewModel::class.java)
     }
 
     private fun showGlicemyDetailsDialog(glicemy: Glicemia) {
@@ -103,18 +103,16 @@ class ReportOne : Fragment() {
         val valueGlicemy: TextView = dialogView.valueGlicemy
         val valueDate: TextView = dialogView.valueDate
         val valueObs: TextView = dialogView.valueObs
+        val ambiente: TextView = dialogView.valueAmbiente
 
         valueGlicemy.text = glicemy.value.toString()
-        valueDate.text = glicemy.date.toString()
+        valueDate.text = glicemy.date
         valueObs.text = glicemy.observation
+        ambiente.text = glicemy.loc
 
         builder.setPositiveButton("Fechar", null)
         builder.show()
 
-        // val serialNumber: String = Build.ID
-        val serialNumber: String = Build.DEVICE
-
-        // Log.i(TAG, serialNumber)
     }
 
     companion object {

@@ -32,7 +32,7 @@ class RegistroGlicemiaAdapter(val registros: List<Glicemia>, val onItemClick: (G
         dateFormat.timeZone = timeZoneBahia
 
         holder.textViewValor.text = registro.value.toString()
-        holder.textViewInsulina.text = registro.insulina_apply.toString()
+        holder.textViewInsulina.text = registro.insulinaApply.toString()
         holder.textViewData.text = registro.date
         holder.textViewId.text = registro.id.toString()
 

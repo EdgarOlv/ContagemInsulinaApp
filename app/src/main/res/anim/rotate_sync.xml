@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   SipuB - Sistema de Informação Pública
+
+  @link https://github.com/facilitatech/sip-android for the canonical source repository
+
+  @copyright Copyright (c) Facilita.tech. (https://facilita.tech)
+
+  -->
+
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <rotate android:fromDegrees="360"
+        android:toDegrees="0"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:duration="1000"
+        android:repeatMode="restart"
+        android:repeatCount="infinite"
+        android:interpolator="@android:anim/cycle_interpolator"/>
+</set>

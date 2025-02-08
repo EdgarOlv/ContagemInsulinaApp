@@ -7,15 +7,11 @@
     tools:context=".modules.Report.ReportFragment">
 
         <com.androidplot.xy.XYPlot
-            android:id="@+id/chartGlicemy"
-            style="@style/APDefacto.Light"
+            android:id="@+id/glicemiaPlot"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:title="@string/glicemy_chart"
+            android:layout_height="400dp"/>
 
 
-
-        />
 
 
 

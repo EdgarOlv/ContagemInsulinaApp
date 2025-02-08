@@ -1,10 +1,12 @@
 package com.example.contagemglicemia.dao
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import com.example.contagemglicemia.model.Glicemia
 import com.example.contagemglicemia.model.GlicemiaClean
-import com.example.contagemglicemia.model.dateFormat
 import com.example.contagemglicemia.model.toGlicemia
 import com.example.contagemglicemia.model.toGlicemiaCloud
 import com.google.firebase.database.DataSnapshot
@@ -13,9 +15,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.TimeZone
@@ -41,7 +40,6 @@ class FirebaseDB {
             val instanceCloud = database.getReference("glicemia")
 
             val data = glicemiaCloud.data
-            val dateConverted = dateFormat.parse(data)
 
             instanceCloud.child(dateString.toString()).setValue(glicemiaCloud)
         } catch (e: Exception) {
@@ -71,38 +69,40 @@ class FirebaseDB {
         val database = FirebaseDatabase.getInstance()
         val glicemiaRef = database.getReference("glicemia")
 
-        // val query = glicemiaRef.orderByChild("loc").equalTo("pc")
-        val query = glicemiaRef.orderByChild("loc")
-            .startAt("pc")
-
-        query.addListenerForSingleValueEvent(object : ValueEventListener {
+        glicemiaRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            @SuppressLint("HardwareIds")
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val glicemias: MutableList<GlicemiaClean> = mutableListOf()
                 val existingDates = dbManager.getAllGlicemyDates()
-                var lastGlicemia = GlicemiaClean()
+                val currentDeviceId = Build.MODEL
+                //Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
 
                 for (snapshot in dataSnapshot.children) {
                     try {
                         val glicemia = snapshot.getValue(GlicemiaClean::class.java)
-                        if (glicemia != null && lastGlicemia != glicemia) {
+                        if (glicemia != null) {
                             val data = glicemia.data
-                            val dateConverted = dateFormat.parse(data)
 
-                            if (!existingDates.contains(data)) {
-                                CoroutineScope(Dispatchers.IO).launch {
-                                    dbManager.insertGlycemia(glicemia.toGlicemia())
-                                }
-                                lastGlicemia = glicemia
+                            if (glicemia.loc != currentDeviceId && !existingDates.contains(data)) {
+                                dbManager.insertGlycemia(glicemia.toGlicemia())
                                 glicemias.add(glicemia)
                             }
                         }
                     } catch (e: Exception) {
+                        Log.e("ReceberListNuvem", "Erro ao processar dados do snapshot", e)
                     }
                 }
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
+                Log.e(
+                    "ReceberListNuvem",
+                    "Erro na consulta do Firebase",
+                    databaseError.toException()
+                )
             }
         })
     }
+
+
 }

@@ -1,7 +1,9 @@
 package com.example.contagemglicemia.modules.Home
 
 import android.content.Context
+import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -92,6 +94,7 @@ class HomeViewModel : ViewModel() {
         check1: Boolean,
         check2: Boolean,
         check3: Boolean,
+        checkTesteLocal: Boolean,
         context: Context,
         auth: FirebaseAuth,
         activity: FragmentActivity?,
@@ -126,20 +129,30 @@ class HomeViewModel : ViewModel() {
                 val date = Date()
                 val dateString = dateFormat.format(date)
 
-                val newGlicemia = Glicemia(0, valorDigitado, dateString, resultadoInsulina.toInt(), "", 0)
+                val newGlicemia =
+                    Glicemia(0, valorDigitado, dateString, resultadoInsulina.toInt(), "", 0, Build.MODEL)
 
-                dbManager.insertGlycemia(newGlicemia)
-
-                if (MainActivity.isInternetAvailable(context) && auth.currentUser != null) {
-                    firebaseDb.InserirEmNuvem(context, newGlicemia)
-                } else {
-                    val qtd = dbManager.countUnsyncedGlicemy(context, firebaseDb)
-                    if (qtd > 0) {
-                        if (activity != null) {
-                            (activity as MainActivity).setCountGlicemy(qtd)
+                if (checkTesteLocal){
+                    newGlicemia.sync = 1
+                    Toast.makeText(
+                        context,
+                        "Modo teste sem enviar ao banco",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
+                else{
+                    if (MainActivity.isInternetAvailable(context) && auth.currentUser != null) {
+                        enviaNuvem(context, newGlicemia)
+                    } else {
+                        val qtd = dbManager.countUnsyncedGlicemy(context, firebaseDb)
+                        if (qtd > 0) {
+                            if (activity != null) {
+                                (activity as MainActivity).setCountGlicemy(qtd)
+                            }
                         }
                     }
                 }
+                dbManager.insertGlycemia(newGlicemia)
 
 
                 return resultadoTexto
@@ -148,6 +161,13 @@ class HomeViewModel : ViewModel() {
             return "Erro" + e
         }
         return "Erro"
+    }
+
+    private fun enviaNuvem(
+        context: Context,
+        newGlicemia: Glicemia
+    ) {
+        firebaseDb.InserirEmNuvem(context, newGlicemia)
     }
 
     fun acaoTreino(valorGlicemia: Double): String {

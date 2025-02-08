@@ -182,6 +182,16 @@
             app:suffixText="U.I."
             tools:text="Aplicar x U.I" />
 
+        <CheckBox
+            android:id="@+id/checkbox_teste_local"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Teste Local"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

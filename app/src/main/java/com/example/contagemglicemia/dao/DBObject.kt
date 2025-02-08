@@ -8,6 +8,7 @@ object TableGlicemia {
     const val INSULIN_APPLY = "insulina_aplicada"
     const val OBS = "obs"
     const val SYNC = "sync"
+    const val LOC = "loc"
 }
 
 object TableConfig {
